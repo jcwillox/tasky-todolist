@@ -1,0 +1,7 @@
+{
+  "exec": "ts-node -P tsconfig.api.json src/api/server.ts",
+  "ext": "js,ts,json",
+  "watch": [
+    "src/api"
+  ]
+}
