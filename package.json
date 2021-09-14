@@ -3,8 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "start": "node build-api/server.js",
     "watch:web": "react-scripts start",
-    "build": "npm run build:web",
+    "build": "concurrently 'npm:build:api' 'npm:build:web' -c green.bold,magenta.bold",
+    "build:api": "tsc -p tsconfig.api.json",
     "build:web": "react-scripts build",
     "test": "npm run test:web",
     "test:web": "react-scripts test",
@@ -12,6 +14,7 @@
     "eject": "react-scripts eject"
   },
   "dependencies": {
+    "express": "^4.17.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-scripts": "4.0.3",
@@ -21,10 +24,12 @@
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
+    "@types/express": "^4.17.13",
     "@types/jest": "^26.0.24",
     "@types/node": "^12.20.24",
     "@types/react": "^17.0.20",
     "@types/react-dom": "^17.0.9",
+    "concurrently": "^6.2.1",
     "typescript": "^4.4.3"
   },
   "engines": {
