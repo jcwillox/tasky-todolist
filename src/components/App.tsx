@@ -1,21 +1,16 @@
 import React from "react";
-import { createTheme, CssBaseline, ThemeProvider } from "@mui/material";
+import { CssBaseline } from "@mui/material";
 import AppHeader from "./AppHeader";
 import AppContent from "./AppContent";
-
-const theme = createTheme({
-  palette: {
-    mode: "light"
-  }
-});
+import ThemeModeProvider from "./ThemeModeContext";
 
 function App() {
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeModeProvider>
       <CssBaseline />
       <AppHeader />
       <AppContent />
-    </ThemeProvider>
+    </ThemeModeProvider>
   );
 }
 
