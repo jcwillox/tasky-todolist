@@ -19,7 +19,7 @@
     "description": "Creates a stateless React Typescript component"
   },
   "React TS component with Props": {
-    "scope": "javascript,javascriptreact,typescript,typescriptreact",
+    "scope": "typescript,typescriptreact",
     "prefix": "rtscp",
     "body": [
       "import React from \"react\";",
@@ -58,5 +58,24 @@
       ""
     ],
     "description": "Creates a test for a React component"
+  },
+  "React TS @mui styled component": {
+    "scope": "javascript,javascriptreact,typescript,typescriptreact",
+    "prefix": "rtsmsc",
+    "body": ["const $1 = styled(\"div\")(", "  ({ theme }) => ``", ");"],
+    "description": "Creates a React Typescript @mui styled component"
+  },
+  "React TS props block": {
+    "scope": "typescript,typescriptreact",
+    "prefix": "rtsp",
+    "body": [
+      "type ${TM_FILENAME_BASE}Props = {",
+      "  $0",
+      "};",
+      "",
+      "const $TM_FILENAME_BASE = (props: ${TM_FILENAME_BASE}Props) => {",
+      ""
+    ],
+    "description": "Creates a React TS props block"
   }
 }
