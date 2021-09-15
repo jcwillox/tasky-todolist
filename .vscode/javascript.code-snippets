@@ -1,5 +1,5 @@
 {
-  "Creates a stateless React Typescript component": {
+  "React TS component": {
     "scope": "javascript,javascriptreact,typescript,typescriptreact",
     "prefix": "rtsc",
     "body": [
@@ -18,7 +18,7 @@
     ],
     "description": "Creates a stateless React Typescript component"
   },
-  "Creates a stateless React Typescript component with Props": {
+  "React TS component with Props": {
     "scope": "javascript,javascriptreact,typescript,typescriptreact",
     "prefix": "rtscp",
     "body": [
@@ -40,5 +40,23 @@
       ""
     ],
     "description": "Creates a stateless React Typescript component with Props"
+  },
+  "Test for a React component": {
+    "scope": "javascript,javascriptreact,typescript,typescriptreact",
+    "prefix": "rtst",
+    "body": [
+      "import React from \"react\";",
+      "import { render, screen } from \"@testing-library/react\";",
+      "import ${TM_FILENAME/^([^.]+).+$/$1/} from \"./${TM_FILENAME/^([^.]+).+$/$1/}\";",
+      "",
+      "describe(\"${TM_FILENAME/^([^.]+).+$/$1/} component\", () => {",
+      "  test(\"${1:renders content}\", () => {",
+      "    render(<${TM_FILENAME/^([^.]+).+$/$1/} />);",
+      "    $0",
+      "  });",
+      "});",
+      ""
+    ],
+    "description": "Creates a test for a React component"
   }
 }
