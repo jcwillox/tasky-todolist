@@ -11,7 +11,7 @@ jest.mock("./DarkModeToggle", () => {
 describe("AppHeader component", () => {
   test("renders title", () => {
     render(<AppHeader />);
-    const titleElement = screen.getByText("TodoIt");
+    const titleElement = screen.getByText("Tasky");
     expect(titleElement).toBeInTheDocument();
   });
 });
