@@ -2,6 +2,7 @@
   "name": "tasky",
   "version": "0.1.0",
   "private": true,
+  "proxy": "http://localhost:5000",
   "scripts": {
     "start": "node build-api/server.js",
     "watch": "concurrently 'npm:watch:api' 'npm:watch:web' -c green.bold,magenta.bold",
