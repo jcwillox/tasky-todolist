@@ -6,7 +6,8 @@ import React, {
   useMemo,
   useState
 } from "react";
-import { createTheme, PaletteMode, ThemeProvider } from "@mui/material";
+import { PaletteMode, ThemeProvider } from "@mui/material";
+import { getTheme } from "../config/theme";
 
 const ThemeModeContext = createContext({
   toggleThemeMode: () => {}
@@ -30,15 +31,7 @@ const ThemeModeProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => localStorage.setItem("theme", mode), [mode]);
 
-  const theme = useMemo(
-    () =>
-      createTheme({
-        palette: {
-          mode
-        }
-      }),
-    [mode]
-  );
+  const theme = useMemo(() => getTheme(mode), [mode]);
 
   return (
     <ThemeModeContext.Provider value={themeMode}>
