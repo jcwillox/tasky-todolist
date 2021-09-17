@@ -7,18 +7,31 @@ const Spacer = styled("span")({ flexGrow: 1 });
 
 const AppHeader = () => {
   return (
-    <AppBar position="fixed" sx={{ flexGrow: 1 }}>
+    <AppBar
+      position="fixed"
+      sx={{
+        flexGrow: 1,
+        backgroundImage: "none"
+      }}
+    >
       <Toolbar>
         <Box
           sx={{
             marginLeft: -1.5,
             marginRight: 2,
-            padding: 1,
-            width: 48,
-            height: 48
+            padding: 0.8,
+            width: 42,
+            height: 42,
+            boxShadow: 4,
+            backgroundColor: "primary.main",
+            borderRadius: 1.5
           }}
         >
-          <LogoIcon />
+          <LogoIcon
+            style={{
+              filter: "drop-shadow(3px 3px 3px rgb(0 0 0 / 0.2))"
+            }}
+          />
         </Box>
         <Typography variant="h6" noWrap>
           Tasky
