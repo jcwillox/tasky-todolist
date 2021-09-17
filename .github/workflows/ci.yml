@@ -25,6 +25,8 @@ jobs:
         run: npm ci
       - name: Run Lint
         run: npm run lint -s
+      - name: Check format
+        run: npm run format:check
   build:
     name: Build & Test
     runs-on: ubuntu-latest
