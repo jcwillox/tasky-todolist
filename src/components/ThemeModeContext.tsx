@@ -1,6 +1,6 @@
 import React, {
   createContext,
-  ReactNode,
+  FunctionComponent,
   useContext,
   useEffect,
   useMemo,
@@ -15,7 +15,7 @@ const ThemeModeContext = createContext({
 
 export const useThemeModeToggle = () => useContext(ThemeModeContext);
 
-const ThemeModeProvider = ({ children }: { children: ReactNode }) => {
+const ThemeModeProvider: FunctionComponent = ({ children }) => {
   const [mode, setMode] = useState<PaletteMode>(
     (localStorage.getItem("theme") || "light") as PaletteMode
   );

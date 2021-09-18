@@ -1,4 +1,5 @@
 import { createTheme, PaletteMode } from "@mui/material";
+import LinkBehavior from "../components/LinkBehavior";
 
 export const getTheme = (mode: PaletteMode) =>
   createTheme({
@@ -20,5 +21,18 @@ export const getTheme = (mode: PaletteMode) =>
               default: "#1F1F1F"
             }
           })
+    },
+    components: {
+      MuiLink: {
+        defaultProps: {
+          // @ts-ignore
+          component: LinkBehavior
+        }
+      },
+      MuiButtonBase: {
+        defaultProps: {
+          LinkComponent: LinkBehavior
+        }
+      }
     }
   });
