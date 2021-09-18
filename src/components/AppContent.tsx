@@ -1,30 +1,15 @@
-import React, { ReactNode } from "react";
-import { Container, styled } from "@mui/material";
+import React from "react";
+import { Redirect, Route, Switch } from "react-router-dom";
+import TaskView from "../views/TaskView";
 
-const AppbarOffset = styled("div")(({ theme }) => theme.mixins.toolbar);
-
-type AppContentProps = {
-  children?: ReactNode;
-};
-
-const AppContent = ({ children }: AppContentProps) => {
+const AppContent = () => {
   return (
-    <Container
-      maxWidth="md"
-      disableGutters
-      sx={{
-        height: "100vh",
-        display: "flex",
-        flexDirection: "column",
-        padding: {
-          xs: 2,
-          md: 3
-        }
-      }}
-    >
-      <AppbarOffset />
-      {children}
-    </Container>
+    <Switch>
+      <Route exact path="/" component={TaskView} />
+      <Route path="*">
+        <Redirect to="/" />
+      </Route>
+    </Switch>
   );
 };
 
