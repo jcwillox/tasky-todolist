@@ -1,4 +1,5 @@
 import { Sequelize } from "sequelize";
+import User from "./models/users";
 import { SyncOptions } from "sequelize/types/lib/sequelize";
 
 let sequelize: Sequelize | null;
@@ -7,6 +8,8 @@ const connect = async () => {
   const url = process.env.DB_URL || "sqlite::memory:";
 
   sequelize = new Sequelize(url, { logging: false });
+
+  User.define(sequelize);
 
   await sequelize.authenticate();
   await sequelize.sync();
