@@ -5,7 +5,12 @@ import User from "../database/models/users";
 import { ValidationError } from "sequelize";
 import { LoginBody } from "../../models/login";
 
-const SECRET_KEY = process.env.SECRET_KEY || "test_secret_key";
+const getSecret = () => {
+  if (process.env.SECRET_KEY) {
+    return Buffer.from(process.env.SECRET_KEY, "base64");
+  }
+  return "test_secret_key";
+};
 
 const router = Router();
 
@@ -23,7 +28,7 @@ router.post("/login", async (req: Request, res: Response) => {
   if (user && (await user.validatePassword(password)))
     return res.json({
       ...user.details(),
-      token: jwt.sign({ id: user.id }, SECRET_KEY)
+      token: jwt.sign({ id: user.id }, getSecret())
     });
 
   return res.sendStatus(401);

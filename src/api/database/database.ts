@@ -5,7 +5,7 @@ import { SyncOptions } from "sequelize/types/lib/sequelize";
 let sequelize: Sequelize | null;
 
 const connect = async () => {
-  const url = process.env.DB_URL || "sqlite::memory:";
+  const url = process.env.DATABASE_URL || "sqlite::memory:";
 
   sequelize = new Sequelize(url, { logging: false });
 
