@@ -5,6 +5,7 @@
   "proxy": "http://localhost:5000",
   "scripts": {
     "start": "node build-api/api/server.js",
+    "start:api": "ts-node -P tsconfig.api.json src/api/server.ts",
     "watch": "concurrently 'npm:watch:api' 'npm:watch:web' -c green.bold,magenta.bold",
     "watch:api": "nodemon",
     "watch:web": "react-scripts start",
