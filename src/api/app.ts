@@ -2,10 +2,10 @@ import cors from "cors";
 import express, { Express, Request, Response } from "express";
 import morgan from "morgan";
 
+const { NODE_ENV } = process.env;
 const app: Express = express();
 
-const nodeEnv = process.env.NODE_ENV;
-if (nodeEnv !== "production" && nodeEnv !== "test") {
+if (NODE_ENV !== "production" && NODE_ENV !== "test") {
   app.use(morgan("dev"));
 }
 
