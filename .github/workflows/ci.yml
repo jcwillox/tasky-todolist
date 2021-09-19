@@ -50,4 +50,4 @@ jobs:
     - name: Run Build
       run: npm run build -s
     - name: Run Tests
-      run: npm test -s
+      run: npm test
