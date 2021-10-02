@@ -3,7 +3,7 @@ import jwt from "jwt-promisify";
 import User from "../database/models/users";
 import { ValidationError } from "sequelize";
 import { LoginBody } from "../../models/login";
-import { yupSchema } from "../middlewares";
+import { asyncRoute, yupSchema } from "../middlewares";
 import { LoginBodySchema, RegisterSchema } from "../../schemas";
 
 const getSecret = () => {
@@ -20,7 +20,7 @@ router.use(express.json());
 router.post(
   "/login",
   yupSchema({ body: LoginBodySchema }),
-  async (req: Request, res: Response) => {
+  asyncRoute(async (req: Request, res: Response) => {
     const { password, username }: LoginBody = req.body;
 
     const user = await User.findOne({
@@ -36,7 +36,7 @@ router.post(
       });
 
     return res.sendStatus(401);
-  }
+  })
 );
 
 router.post(
