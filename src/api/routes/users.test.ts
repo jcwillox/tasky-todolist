@@ -7,6 +7,11 @@ import { SECRET_KEY } from "../../config/secret";
 
 const api = supertest(app);
 
+const credentials = {
+  username: "john",
+  password: "smith123"
+};
+
 describe("users", () => {
   beforeAll(database.connect);
   afterAll(database.disconnect);
@@ -17,10 +22,6 @@ describe("users", () => {
   });
 
   test("user can login", async () => {
-    const credentials = {
-      username: "john",
-      password: "smith123"
-    };
     const user = await User.create(credentials);
     await api
       .post("/api/login")
@@ -38,42 +39,27 @@ describe("users", () => {
   });
 
   test("user cannot login with invalid password", async () => {
-    await User.create({
-      username: "john",
-      password: "smith"
-    });
+    await User.create(credentials);
     await api
       .post("/api/login")
       .send({
-        username: "john",
-        password: "smith123"
+        ...credentials,
+        password: credentials.password + "incorrect"
       })
       .expect(401);
   });
 
   test("user can be registered", async () => {
-    await api
-      .post("/api/register")
-      .send({
-        username: "david",
-        password: "password123"
-      })
-      .expect(200);
+    await api.post("/api/register").send(credentials).expect(200);
   });
 
   test("cannot register two users with same username", async () => {
+    await api.post("/api/register").send(credentials).expect(200);
     await api
       .post("/api/register")
       .send({
-        username: "david",
+        ...credentials,
         password: "password123"
-      })
-      .expect(200);
-    await api
-      .post("/api/register")
-      .send({
-        username: "david",
-        password: "secret123"
       })
       .expect(422)
       .then(res => {
@@ -141,17 +127,8 @@ describe("users", () => {
   });
 
   test("validate is successful for an authenticated user", async () => {
-    await User.create({
-      username: "john",
-      password: "smith123"
-    });
-    const res = await api
-      .post("/api/login")
-      .send({
-        username: "john",
-        password: "smith123"
-      })
-      .expect(200);
+    await User.create(credentials);
+    const res = await api.post("/api/login").send(credentials).expect(200);
     await api
       .get("/api/validate")
       .set("Authorization", "Bearer " + res.body.token)
@@ -175,17 +152,9 @@ describe("users", () => {
   });
 
   test("validate fails for non-existent user", async () => {
-    const user = await User.create({
-      username: "john",
-      password: "smith123"
-    });
-    const res = await api
-      .post("/api/login")
-      .send({
-        username: "john",
-        password: "smith123"
-      })
-      .expect(200);
+    const user = await User.create(credentials);
+    // generate valid token first
+    const res = await api.post("/api/login").send(credentials).expect(200);
     await user.destroy();
     await api
       .get("/api/validate")
