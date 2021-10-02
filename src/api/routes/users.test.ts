@@ -3,6 +3,7 @@ import database from "../database/database";
 import app from "../app";
 import User from "../database/models/users";
 import jwt from "jwt-promisify";
+import { SECRET_KEY } from "../../config/secret";
 
 const api = supertest(app);
 
@@ -30,7 +31,7 @@ describe("users", () => {
           name: null,
           username: user.username
         });
-        expect(await jwt.decode(res.body.token)).toMatchObject({
+        expect(await jwt.verify(res.body.token, SECRET_KEY)).toMatchObject({
           id: user.id
         });
       });

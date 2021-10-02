@@ -2,15 +2,9 @@ import express, { Request, Response, Router } from "express";
 import jwt from "jwt-promisify";
 import User from "../database/models/users";
 import { LoginBody } from "../../models/login";
-import { asyncRoute, yupSchema } from "../middlewares";
+import { asyncRoute, jwtAuth, yupSchema } from "../middlewares";
 import { LoginBodySchema, RegisterSchema } from "../../schemas";
-
-const getSecret = () => {
-  if (process.env.SECRET_KEY) {
-    return Buffer.from(process.env.SECRET_KEY, "base64");
-  }
-  return "test_secret_key";
-};
+import { SECRET_KEY } from "../../config/secret";
 
 const router = Router();
 
@@ -31,7 +25,7 @@ router.post(
     if (user && (await user.validatePassword(password)))
       return res.json({
         ...user.details(),
-        token: await jwt.sign({ id: user.id }, getSecret())
+        token: await jwt.sign({ id: user.id }, SECRET_KEY)
       });
 
     return res.sendStatus(401);
