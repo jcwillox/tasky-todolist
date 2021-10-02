@@ -42,4 +42,16 @@ router.post(
   })
 );
 
+router.get(
+  "/validate",
+  jwtAuth,
+  asyncRoute(async (req: Request, res: Response) => {
+    const user = await User.findByPk(req.user!.id);
+    if (user) {
+      return res.json(user.details());
+    }
+    return res.sendStatus(401);
+  })
+);
+
 export default router;

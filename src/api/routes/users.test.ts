@@ -139,4 +139,57 @@ describe("users", () => {
         });
       });
   });
+
+  test("validate is successful for an authenticated user", async () => {
+    await User.create({
+      username: "john",
+      password: "smith123"
+    });
+    const res = await api
+      .post("/api/login")
+      .send({
+        username: "john",
+        password: "smith123"
+      })
+      .expect(200);
+    await api
+      .get("/api/validate")
+      .set("Authorization", "Bearer " + res.body.token)
+      .expect(200);
+  });
+
+  test("validate fails for invalid token", async () => {
+    await api
+      .get("/api/validate")
+      .set(
+        "Authorization",
+        "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9" +
+          ".eyJpZCI6IjA2MDljOWE0LTlkMzAtNDYyNi04YjA3LTdiZWU0NTg5MTdiMCIsImlhdCI6MTYzMzE1NzY2Nn0" +
+          ".VZLeOtnxTvqn61Ha9Vu_Xe2Njf3W32Mdj7wkTGappCA"
+      )
+      .expect(401);
+  });
+
+  test("validate fails missing header", async () => {
+    await api.get("/api/validate").expect(401);
+  });
+
+  test("validate fails for non-existent user", async () => {
+    const user = await User.create({
+      username: "john",
+      password: "smith123"
+    });
+    const res = await api
+      .post("/api/login")
+      .send({
+        username: "john",
+        password: "smith123"
+      })
+      .expect(200);
+    await user.destroy();
+    await api
+      .get("/api/validate")
+      .set("Authorization", "Bearer " + res.body.token)
+      .expect(401);
+  });
 });
