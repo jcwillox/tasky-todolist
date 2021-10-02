@@ -6,23 +6,24 @@ import { ValidateOptions } from "yup/lib/types";
 type SchemaType = {
   body?: BaseSchema;
   params?: BaseSchema;
+  [key: string]: BaseSchema | undefined;
 };
 
 type ValidateFn = (req: Request, options: ValidateOptions) => Promise<any>;
 
 /** Returns Yup validator function to validate the set fields */
 const createValidate = (schema: SchemaType): ValidateFn | undefined => {
-  if (schema.body && schema.params)
-    return object({
-      body: schema.body,
-      params: schema.params
-    }).validate;
-  else if (schema.body)
-    return (req: Request, options: ValidateOptions) =>
-      schema.body!.validate(req.body, options);
-  else if (schema.params)
-    return (req: Request, options: ValidateOptions) =>
-      schema.params!.validate(req.params, options);
+  const keys = Object.keys(schema);
+  if (keys.length > 1) {
+    let obj = object(schema as Record<string, BaseSchema>);
+    return async (req: Request, options: ValidateOptions) =>
+      await obj.validate(req, options);
+  } else if (keys.length > 0) {
+    const key = keys[0];
+    return async (req: Request, options: ValidateOptions) => ({
+      [key]: await schema[key]!.validate(req[key], options)
+    });
+  }
 };
 
 /** Express middleware to perform Yup schema validation on the request */
@@ -37,7 +38,7 @@ export const yupSchema = (schema: SchemaType) => {
       return next();
     }
     try {
-      await validate(req, options);
+      Object.assign(req, await validate(req, options));
       next();
     } catch (err) {
       if (err instanceof ValidationError) {
