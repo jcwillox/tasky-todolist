@@ -2,7 +2,7 @@ import supertest from "supertest";
 import database from "../database/database";
 import app from "../app";
 import User from "../database/models/users";
-import jwt from "jsonwebtoken";
+import jwt from "jwt-promisify";
 
 const api = supertest(app);
 
@@ -25,12 +25,12 @@ describe("users", () => {
       .post("/api/login")
       .send(credentials)
       .expect(200)
-      .then(res => {
+      .then(async res => {
         expect(res.body).toMatchObject({
           name: null,
           username: user.username
         });
-        expect(jwt.decode(res.body.token)).toMatchObject({
+        expect(await jwt.decode(res.body.token)).toMatchObject({
           id: user.id
         });
       });

@@ -1,6 +1,5 @@
 import express, { NextFunction, Request, Response, Router } from "express";
-import { NewUser } from "../../models/user";
-import jwt from "jsonwebtoken";
+import jwt from "jwt-promisify";
 import User from "../database/models/users";
 import { ValidationError } from "sequelize";
 import { LoginBody } from "../../models/login";
@@ -33,7 +32,7 @@ router.post(
     if (user && (await user.validatePassword(password)))
       return res.json({
         ...user.details(),
-        token: jwt.sign({ id: user.id }, getSecret())
+        token: await jwt.sign({ id: user.id }, getSecret())
       });
 
     return res.sendStatus(401);
@@ -44,10 +43,8 @@ router.post(
   "/register",
   yupSchema({ body: RegisterSchema }),
   async (req: Request, res: Response, next: NextFunction) => {
-    const body: NewUser = req.body;
-
     try {
-      await User.create(body);
+      await User.create(req.body);
       res.sendStatus(200);
     } catch (err) {
       if (err instanceof ValidationError) {
