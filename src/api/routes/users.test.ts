@@ -76,10 +76,63 @@ describe("users", () => {
       })
       .expect(422)
       .then(res => {
-        expect(res.body).toMatchObject({
+        expect(res.body).toEqual({
           errors: [
             {
-              attribute: "username"
+              path: "username",
+              message: "username must be unique"
+            }
+          ]
+        });
+      });
+  });
+
+  test("register fails when fields are too long", async () => {
+    await api
+      .post("/api/register")
+      .send({
+        name: "-".repeat(129),
+        username: "-".repeat(33),
+        password: "-".repeat(61)
+      })
+      .expect(422)
+      .then(res => {
+        expect(res.body).toEqual({
+          errors: [
+            {
+              path: "username",
+              message: "username must be at most 32 characters"
+            },
+            {
+              path: "name",
+              message: "name must be at most 128 characters"
+            },
+            {
+              path: "password",
+              message: "password must be at most 60 characters"
+            }
+          ]
+        });
+      });
+  });
+
+  test("register fails when missing required fields", async () => {
+    await api
+      .post("/api/register")
+      .send({
+        name: "David"
+      })
+      .expect(422)
+      .then(res => {
+        expect(res.body).toEqual({
+          errors: [
+            {
+              path: "username",
+              message: "username is a required field"
+            },
+            {
+              path: "password",
+              message: "password is a required field"
             }
           ]
         });
