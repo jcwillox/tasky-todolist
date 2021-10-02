@@ -1,7 +1,6 @@
-import express, { NextFunction, Request, Response, Router } from "express";
+import express, { Request, Response, Router } from "express";
 import jwt from "jwt-promisify";
 import User from "../database/models/users";
-import { ValidationError } from "sequelize";
 import { LoginBody } from "../../models/login";
 import { asyncRoute, yupSchema } from "../middlewares";
 import { LoginBodySchema, RegisterSchema } from "../../schemas";
@@ -42,23 +41,11 @@ router.post(
 router.post(
   "/register",
   yupSchema({ body: RegisterSchema }),
-  async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      await User.create(req.body);
-      res.sendStatus(200);
-    } catch (err) {
-      if (err instanceof ValidationError) {
-        res.status(422).json({
-          errors: err.errors.map(item => ({
-            path: item.path,
-            message: item.message
-          }))
-        });
-      } else {
-        next(err);
-      }
-    }
-  }
+  asyncRoute(async (req: Request, res: Response) => {
+    await User.create(req.body);
+    // validation/creation errors have been handled by this point
+    return res.sendStatus(200);
+  })
 );
 
 export default router;
