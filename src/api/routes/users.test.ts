@@ -19,7 +19,7 @@ describe("users", () => {
   test("user can login", async () => {
     const credentials = {
       username: "john",
-      password: "smith"
+      password: "smith123"
     };
     const user = await User.create(credentials);
     await api
@@ -56,7 +56,7 @@ describe("users", () => {
       .post("/api/register")
       .send({
         username: "david",
-        password: "pass123"
+        password: "password123"
       })
       .expect(200);
   });
@@ -66,7 +66,7 @@ describe("users", () => {
       .post("/api/register")
       .send({
         username: "david",
-        password: "pass123"
+        password: "password123"
       })
       .expect(200);
     await api
