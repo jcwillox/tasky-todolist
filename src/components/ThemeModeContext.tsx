@@ -2,12 +2,11 @@ import React, {
   createContext,
   FunctionComponent,
   useContext,
-  useEffect,
-  useMemo,
-  useState
+  useMemo
 } from "react";
 import { PaletteMode, ThemeProvider } from "@mui/material";
 import { getTheme } from "../config/theme";
+import { useLocalStorageState } from "use-local-storage-state";
 
 const ThemeModeContext = createContext({
   toggleThemeMode: () => {}
@@ -16,9 +15,7 @@ const ThemeModeContext = createContext({
 export const useThemeModeToggle = () => useContext(ThemeModeContext);
 
 const ThemeModeProvider: FunctionComponent = ({ children }) => {
-  const [mode, setMode] = useState<PaletteMode>(
-    (localStorage.getItem("theme") || "light") as PaletteMode
-  );
+  const [mode, setMode] = useLocalStorageState<PaletteMode>("theme", "light");
 
   const themeMode = useMemo(
     () => ({
@@ -26,12 +23,10 @@ const ThemeModeProvider: FunctionComponent = ({ children }) => {
         setMode(prevMode => (prevMode === "light" ? "dark" : "light"));
       }
     }),
-    []
+    [setMode]
   );
 
-  useEffect(() => localStorage.setItem("theme", mode), [mode]);
-
-  const theme = useMemo(() => getTheme(mode), [mode]);
+  const theme = useMemo(() => getTheme(mode!), [mode]);
 
   return (
     <ThemeModeContext.Provider value={themeMode}>
