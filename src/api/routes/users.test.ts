@@ -12,15 +12,15 @@ const credentials = {
   password: "smith123"
 };
 
-describe("users", () => {
-  beforeAll(database.connect);
-  afterAll(database.disconnect);
+beforeAll(database.connect);
+afterAll(database.disconnect);
 
-  beforeEach(() => {
-    // clear the database
-    return database.sync({ force: true });
-  });
+beforeEach(() => {
+  // clear the database
+  return database.sync({ force: true });
+});
 
+describe("login", () => {
   test("user can login", async () => {
     const user = await User.create(credentials);
     await api
@@ -48,7 +48,9 @@ describe("users", () => {
       })
       .expect(401);
   });
+});
 
+describe("register", () => {
   test("user can be registered", async () => {
     await api.post("/api/register").send(credentials).expect(200);
   });
@@ -125,7 +127,9 @@ describe("users", () => {
         });
       });
   });
+});
 
+describe("validate", () => {
   test("validate is successful for an authenticated user", async () => {
     await User.create(credentials);
     const res = await api.post("/api/login").send(credentials).expect(200);
