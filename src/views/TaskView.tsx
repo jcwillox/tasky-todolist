@@ -1,7 +1,7 @@
 import React from "react";
 
 const TaskView = () => {
-  return <div />;
+  return <div>TaskView</div>;
 };
 
 export default TaskView;
