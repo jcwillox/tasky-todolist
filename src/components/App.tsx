@@ -1,6 +1,7 @@
 import React from "react";
 import AppHeader from "./AppHeader";
 import AppContent from "./AppContent";
+import { ProvideAuth } from "./AuthContext";
 import { Container, CssBaseline, styled, Theme } from "@mui/material";
 import { SxProps } from "@mui/system";
 import ThemeModeProvider from "./ThemeModeContext";
@@ -20,16 +21,18 @@ const containerStyle: SxProps<Theme> = {
 
 function App() {
   return (
-    <ThemeModeProvider>
-      <CssBaseline />
-      <BrowserRouter>
-        <AppHeader />
-        <Container maxWidth="md" disableGutters sx={containerStyle}>
-          <AppbarOffset />
-          <AppContent />
-        </Container>
-      </BrowserRouter>
-    </ThemeModeProvider>
+    <ProvideAuth>
+      <ThemeModeProvider>
+        <CssBaseline />
+        <BrowserRouter>
+          <AppHeader />
+          <Container maxWidth="md" disableGutters sx={containerStyle}>
+            <AppbarOffset />
+            <AppContent />
+          </Container>
+        </BrowserRouter>
+      </ThemeModeProvider>
+    </ProvideAuth>
   );
 }
 
