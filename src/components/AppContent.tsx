@@ -8,7 +8,7 @@ import RegisterView from "../views/RegisterView";
 const AppContent = () => {
   const auth = useAuth();
 
-  if (auth.user)
+  if (auth.user) {
     return (
       <Switch>
         <Route exact path="/" component={TaskView} />
@@ -17,6 +17,7 @@ const AppContent = () => {
         </Route>
       </Switch>
     );
+  }
 
   return (
     <Switch>
