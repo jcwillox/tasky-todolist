@@ -2,10 +2,14 @@ import React from "react";
 import { Box, Typography } from "@mui/material";
 import AppLogo from "./AppLogo";
 type AppFormTitleProps = {
+  shadow?: boolean;
   title: string;
 };
 
-const AppFormTitle = ({ title = "Form Title" }: AppFormTitleProps) => {
+const AppFormTitle = ({
+  shadow = true,
+  title = "Form Title"
+}: AppFormTitleProps) => {
   return (
     <Box
       sx={{
@@ -15,7 +19,7 @@ const AppFormTitle = ({ title = "Form Title" }: AppFormTitleProps) => {
         alignItems: "center"
       }}
     >
-      <AppLogo shadow={true} />
+      <AppLogo shadow={shadow} />
       <Typography
         variant="h4"
         color="primary"
