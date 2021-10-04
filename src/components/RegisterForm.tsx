@@ -18,16 +18,16 @@ const validationSchema = yup.object({
   name: yup.string().required("Your name is required"),
   email: yup
     .string()
-    .email("Enter a valid email")
+    .email("Please nter a valid email")
     .required("Email is required"),
   password: yup
     .string()
-    .min(8, "Password should be of minimum 8 characters length")
+    .min(6, "Password should be of minimum 6 characters length")
     .required("Password is required"),
   confirmPassword: yup
     .string()
     .oneOf([yup.ref("password"), null], "Passwords must match")
-    .required("Please retype your password")
+    .required("Password does not match")
 });
 
 const RegisterForm = (handleChange, handleSubmit) => {
@@ -64,7 +64,6 @@ const RegisterForm = (handleChange, handleSubmit) => {
         <TextField
           id="email"
           name="email"
-          type="email"
           label="Email"
           placeholder="john.smith@gmail.com"
           variant="outlined"
@@ -88,8 +87,8 @@ const RegisterForm = (handleChange, handleSubmit) => {
           sx={textFieldStyle}
         />
         <TextField
-          id="password"
-          name="password"
+          id="confirmPassword"
+          name="confirmPassword"
           type="password"
           label="Confirm Password"
           variant="outlined"
