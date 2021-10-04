@@ -3,7 +3,6 @@ import { AppBar, Box, styled, Toolbar, Typography } from "@mui/material";
 import DarkModeToggle from "./DarkModeToggle";
 import { ReactComponent as LogoIcon } from "../assets/logo.svg";
 
-
 const Spacer = styled("span")({ flexGrow: 1 });
 
 const AppHeader = () => {
