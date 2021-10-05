@@ -1,6 +1,10 @@
 import React from "react";
 import Box from "@mui/material/Box";
 
+/**
+ * A high level view component, everything inside it will be centered vertically and horizontally
+ */
+
 const AppView = ({ children }) => {
   return (
     <Box

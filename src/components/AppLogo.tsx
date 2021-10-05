@@ -1,6 +1,11 @@
 import React from "react";
 import { ReactComponent as LogoIcon } from "../assets/logo.svg";
 
+/**
+ * Logo component
+ *
+ */
+
 type AppLogoProps = {
   shadow?: boolean;
   width?: number;
