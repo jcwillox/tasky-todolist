@@ -1,28 +1,36 @@
 import { useState } from "react";
-import { ReactComponent as LogoIcon } from "../assets/logo.svg";
+import AppFormTitle from "../components/AppFormTitle";
+import AppView from "../components/AppView";
+import { useFormik } from "formik";
 import {
-  Button,
-  Paper,
-  Typography,
-  Container,
+  Box,
   IconButton,
-  FormControl,
-  InputLabel,
-  OutlinedInput,
-  InputAdornment
+  Button,
+  InputAdornment,
+  TextField
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
+import { RegisterConfirmSchema } from "../schemas";
 import { useAuth } from "../components/AuthContext";
+
+const textFieldStyle = {
+  width: 328,
+  mt: 3
+};
+
+const centered = {
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center"
+};
+
+const validationSchema = RegisterConfirmSchema;
 
 const LoginView = () => {
   const [values, setValues] = useState({
     password: "",
     showPassword: false
   });
-
-  const handleChange = prop => event => {
-    setValues({ ...values, [prop]: event.target.value });
-  };
 
   const handleClickShowPassword = () => {
     setValues({ ...values, showPassword: !values.showPassword });
@@ -31,111 +39,114 @@ const LoginView = () => {
   const handleMouseDownPassword = event => {
     event.preventDefault();
   };
+
   const auth = useAuth();
+
+  const formik = useFormik({
+    initialValues: {
+      username: "",
+      password: ""
+    },
+    validationSchema: validationSchema,
+    onSubmit: async values => {
+      await auth.login(values);
+    }
+  });
+
   return (
-    <Paper
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        textAlign: "center",
-        backgroundColor: "transparent",
-        border: theme => `2px solid ${theme.palette.primary.main}`,
-        borderRadius: 3,
-        marginTop: 5,
-        flexGrow: 1,
-        padding: 4
-      }}
-      variant="outlined"
-    >
-      <LogoIcon
-        style={{
-          filter: "drop-shadow(3px 3px 3px rgb(0 0 0 / 0.2))",
-          alignSelf: "center",
-          width: "150px",
-          height: "150px"
-        }}
-      />
-
-      <Typography
-        variant="h6"
-        color="primary"
-        style={{
-          marginTop: "60px"
-        }}
-      >
-        Sign In
-      </Typography>
-
-      <Container
+    <AppView>
+      <Box
         sx={{
           display: "flex",
           flexDirection: "column",
-          marginTop: "30px",
-          marginBottom: "30px"
+          flexGrow: 1,
+          justifyContent: "center",
+          alignItems: "center",
+          border: theme => `2px solid ${theme.palette.primary.main}`,
+          borderRadius: 3,
+          maxWidth: 688,
+          maxHeight: 700
         }}
       >
-        <FormControl
-          variant="outlined"
-          sx={{
-            alignSelf: "center",
-            width: "500px",
-            marginBottom: "50px"
-          }}
-        >
-          <InputLabel htmlFor="outlined-adornment-password">
-            Username
-          </InputLabel>
+        <AppFormTitle title="Sign In" />
+        <form onSubmit={formik.handleSubmit}>
+          {/* Textfields container */}
+          <Box sx={{ ...centered, flexDirection: "column" }}>
+            <TextField
+              id="username"
+              name="username"
+              label="Username"
+              placeholder="johnsmith123"
+              variant="outlined"
+              onChange={formik.handleChange}
+              color="primary"
+              error={formik.touched.username && Boolean(formik.errors.username)}
+              helperText={formik.touched.username && formik.errors.username}
+              sx={textFieldStyle}
+            />
+            <TextField
+              id="password"
+              name="password"
+              type={values.showPassword ? "text" : "password"}
+              label="Password"
+              placeholder="Password"
+              variant="outlined"
+              onChange={formik.handleChange}
+              color="primary"
+              error={formik.touched.password && Boolean(formik.errors.password)}
+              helperText={formik.touched.password && formik.errors.password}
+              sx={textFieldStyle}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      onClick={handleClickShowPassword}
+                      onMouseDown={handleMouseDownPassword}
+                      edge="end"
+                    >
+                      {values.showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                )
+              }}
+            />
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                width: "100%"
+              }}
+            >
+              <Button
+                href="/register"
+                sx={{
+                  mt: 2,
+                  alignSelf: "flex-start",
+                  paddingLeft: "0px"
+                }}
+              >
+                Create Account
+              </Button>
 
-          <OutlinedInput label="Username" />
-        </FormControl>
-
-        <FormControl
-          variant="outlined"
-          sx={{
-            alignSelf: "center",
-            width: "500px"
-          }}
-        >
-          <InputLabel htmlFor="outlined-adornment-password">
-            Password
-          </InputLabel>
-
-          <OutlinedInput
-            type={values.showPassword ? "text" : "password"}
-            value={values.password}
-            onChange={handleChange("password")}
-            endAdornment={
-              <InputAdornment position="end">
-                <IconButton
-                  onClick={handleClickShowPassword}
-                  onMouseDown={handleMouseDownPassword}
-                  edge="end"
-                >
-                  {values.showPassword ? <VisibilityOff /> : <Visibility />}
-                </IconButton>
-              </InputAdornment>
-            }
-            label="Password"
-          />
-        </FormControl>
-      </Container>
-
-      <div>
-        <Button
-          onClick={() =>
-            auth.login({ username: "david", password: "secret123" })
-          }
-          style={{
-            marginRight: "200px"
-          }}
-        >
-          Create Account
-        </Button>
-        <Button variant="contained" href="/register">
-          Sign In
-        </Button>
-      </div>
-    </Paper>
+              <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+                onClick={() =>
+                  auth.login({ username: "david", password: "secret123" })
+                }
+                sx={{
+                  mt: 2,
+                  alignSelf: "flex-end"
+                }}
+              >
+                Sign In
+              </Button>
+            </Box>
+          </Box>
+        </form>
+      </Box>
+    </AppView>
   );
 };
 
