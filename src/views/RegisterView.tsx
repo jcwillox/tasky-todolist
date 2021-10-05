@@ -1,10 +1,12 @@
 import React from "react";
 import AppFormTitle from "../components/AppFormTitle";
 import AppView from "../components/AppView";
-import { useFormik } from "formik";
-import { Box, Button, TextField } from "@mui/material";
+import { Form, Formik } from "formik";
+import { Box, Button } from "@mui/material";
 import { RegisterConfirmSchema } from "../schemas";
 import { useAuth } from "../components/AuthContext";
+import FormikTextField from "../components/FormikTextField";
+import FormikPasswordField from "../components/FormikPasswordField";
 
 /**
  * Register Page
@@ -22,24 +24,8 @@ const centered = {
   alignItems: "center"
 };
 
-const validationSchema = RegisterConfirmSchema;
-
 const RegisterView = () => {
   const auth = useAuth();
-
-  const formik = useFormik({
-    initialValues: {
-      name: "",
-      username: "",
-      password: "",
-      confirmPassword: ""
-    },
-    validationSchema: validationSchema,
-    onSubmit: async values => {
-      await auth.register(values);
-    }
-  });
-
   return (
     <AppView>
       {/* Outer Border */}
@@ -57,77 +43,60 @@ const RegisterView = () => {
         }}
       >
         <AppFormTitle title="Create Account" />
-        <form onSubmit={formik.handleSubmit}>
-          {/* Textfields container */}
-          <Box sx={{ ...centered, flexDirection: "column" }}>
-            <TextField
-              id="name"
-              name="name"
-              label="Name"
-              placeholder="John Smith"
-              variant="outlined"
-              onChange={formik.handleChange}
-              color="primary"
-              error={formik.touched.name && Boolean(formik.errors.name)}
-              helperText={formik.touched.name && formik.errors.name}
-              sx={textFieldStyle}
-            />
-            <TextField
-              id="username"
-              name="username"
-              label="Username"
-              placeholder="johnsmith123"
-              variant="outlined"
-              onChange={formik.handleChange}
-              color="primary"
-              error={formik.touched.username && Boolean(formik.errors.username)}
-              helperText={formik.touched.username && formik.errors.username}
-              sx={textFieldStyle}
-            />
-            <TextField
-              id="password"
-              name="password"
-              type="password"
-              label="Password"
-              placeholder="Password"
-              variant="outlined"
-              onChange={formik.handleChange}
-              color="primary"
-              error={formik.touched.password && Boolean(formik.errors.password)}
-              helperText={formik.touched.password && formik.errors.password}
-              sx={textFieldStyle}
-            />
-            <TextField
-              id="confirmPassword"
-              name="confirmPassword"
-              type="password"
-              label="Confirm Password"
-              variant="outlined"
-              placeholder="Confirm Password"
-              onChange={formik.handleChange}
-              color="primary"
-              error={
-                formik.touched.confirmPassword &&
-                Boolean(formik.errors.confirmPassword)
-              }
-              helperText={
-                formik.touched.confirmPassword && formik.errors.confirmPassword
-              }
-              sx={textFieldStyle}
-            />
-            <Button
-              type="submit"
-              variant="contained"
-              color="primary"
-              sx={{
-                mt: 2,
-                alignSelf: "flex-end"
-              }}
-            >
-              Sign Up
-            </Button>
-          </Box>
-        </form>
+        <Formik
+          initialValues={{
+            name: "",
+            username: "",
+            password: "",
+            confirmPassword: ""
+          }}
+          validationSchema={RegisterConfirmSchema}
+          onSubmit={async values => {
+            await auth.register(values);
+          }}
+        >
+          {formik => (
+            <Form>
+              <Box sx={{ ...centered, flexDirection: "column" }}>
+                <FormikTextField
+                  name="name"
+                  label="Name"
+                  placeholder="John Smith"
+                  sx={textFieldStyle}
+                />
+                <FormikTextField
+                  name="username"
+                  label="Username"
+                  placeholder="john.smith"
+                  sx={textFieldStyle}
+                />
+                <FormikPasswordField
+                  name="password"
+                  label="Password"
+                  placeholder="Password"
+                  sx={textFieldStyle}
+                />
+                <FormikPasswordField
+                  name="confirmPassword"
+                  label="Confirm Password"
+                  placeholder="Confirm Password"
+                  sx={textFieldStyle}
+                />
+                <Button
+                  type="submit"
+                  variant="contained"
+                  color="primary"
+                  sx={{
+                    mt: 2,
+                    alignSelf: "flex-end"
+                  }}
+                >
+                  Sign Up
+                </Button>
+              </Box>
+            </Form>
+          )}
+        </Formik>
       </Box>
     </AppView>
   );
