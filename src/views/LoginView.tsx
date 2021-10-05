@@ -1,17 +1,13 @@
-import { useState } from "react";
 import AppFormTitle from "../components/AppFormTitle";
 import AppView from "../components/AppView";
-import { useFormik } from "formik";
-import {
-  Box,
-  IconButton,
-  Button,
-  InputAdornment,
-  TextField
-} from "@mui/material";
-import { Visibility, VisibilityOff } from "@mui/icons-material";
-import { RegisterConfirmSchema } from "../schemas";
+import { Form, Formik } from "formik";
+import { Box, Button } from "@mui/material";
+import { LoadingButton } from "@mui/lab";
+import { LoginBodySchema } from "../schemas";
 import { useAuth } from "../components/AuthContext";
+import FormikTextField from "../components/FormikTextField";
+import FormikPasswordField from "../components/FormikPasswordField";
+import { useAsyncError } from "../hooks/use-async";
 
 const textFieldStyle = {
   width: 328,
@@ -24,34 +20,9 @@ const centered = {
   alignItems: "center"
 };
 
-const validationSchema = RegisterConfirmSchema;
-
 const LoginView = () => {
-  const [values, setValues] = useState({
-    password: "",
-    showPassword: false
-  });
-
-  const handleClickShowPassword = () => {
-    setValues({ ...values, showPassword: !values.showPassword });
-  };
-
-  const handleMouseDownPassword = event => {
-    event.preventDefault();
-  };
-
   const auth = useAuth();
-
-  const formik = useFormik({
-    initialValues: {
-      username: "",
-      password: ""
-    },
-    validationSchema: validationSchema,
-    onSubmit: async values => {
-      await auth.login(values);
-    }
-  });
+  const wrapAsync = useAsyncError();
 
   return (
     <AppView>
@@ -69,78 +40,66 @@ const LoginView = () => {
         }}
       >
         <AppFormTitle title="Sign In" />
-        <form onSubmit={formik.handleSubmit}>
-          {/* Textfields container */}
-          <Box sx={{ ...centered, flexDirection: "column" }}>
-            <TextField
-              id="username"
-              name="username"
-              label="Username"
-              placeholder="johnsmith123"
-              variant="outlined"
-              onChange={formik.handleChange}
-              color="primary"
-              error={formik.touched.username && Boolean(formik.errors.username)}
-              helperText={formik.touched.username && formik.errors.username}
-              sx={textFieldStyle}
-            />
-            <TextField
-              id="password"
-              name="password"
-              type={values.showPassword ? "text" : "password"}
-              label="Password"
-              placeholder="Password"
-              variant="outlined"
-              onChange={formik.handleChange}
-              color="primary"
-              error={formik.touched.password && Boolean(formik.errors.password)}
-              sx={textFieldStyle}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton
-                      onClick={handleClickShowPassword}
-                      onMouseDown={handleMouseDownPassword}
-                      edge="end"
-                    >
-                      {values.showPassword ? <VisibilityOff /> : <Visibility />}
-                    </IconButton>
-                  </InputAdornment>
-                )
-              }}
-            />
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "space-between",
-                width: "100%"
-              }}
-            >
-              <Button
-                href="/register"
-                sx={{
-                  mt: 2,
-                  alignSelf: "flex-start",
-                  paddingLeft: "0px"
-                }}
-              >
-                Create Account
-              </Button>
+        <Formik
+          initialValues={{
+            username: "",
+            password: ""
+          }}
+          validationSchema={LoginBodySchema}
+          onSubmit={async values => {
+            await wrapAsync(auth.login(values));
+          }}
+        >
+          {({ isSubmitting }) => (
+            <Form>
+              {/* Textfields container */}
+              <Box sx={{ ...centered, flexDirection: "column" }}>
+                <FormikTextField
+                  name="username"
+                  label="Username"
+                  placeholder="john.smith"
+                  sx={textFieldStyle}
+                />
+                <FormikPasswordField
+                  name="password"
+                  label="Password"
+                  placeholder="Password"
+                  sx={textFieldStyle}
+                />
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    width: "100%"
+                  }}
+                >
+                  <Button
+                    href="/register"
+                    sx={{
+                      mt: 2,
+                      alignSelf: "flex-start",
+                      paddingLeft: "0px"
+                    }}
+                  >
+                    Create Account
+                  </Button>
 
-              <Button
-                type="submit"
-                variant="contained"
-                color="primary"
-                sx={{
-                  mt: 2,
-                  alignSelf: "flex-end"
-                }}
-              >
-                Sign In
-              </Button>
-            </Box>
-          </Box>
-        </form>
+                  <LoadingButton
+                    type="submit"
+                    variant="contained"
+                    loading={isSubmitting}
+                    sx={{
+                      mt: 2,
+                      alignSelf: "flex-end"
+                    }}
+                  >
+                    {(isSubmitting && "") || "Sign In"}
+                  </LoadingButton>
+                </Box>
+              </Box>
+            </Form>
+          )}
+        </Formik>
       </Box>
     </AppView>
   );
