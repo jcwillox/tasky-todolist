@@ -2,7 +2,8 @@ import React from "react";
 import AppFormTitle from "../components/AppFormTitle";
 import AppView from "../components/AppView";
 import { Form, Formik } from "formik";
-import { Box, Button } from "@mui/material";
+import { Box } from "@mui/material";
+import { LoadingButton } from "@mui/lab";
 import { RegisterConfirmSchema } from "../schemas";
 import { useAuth } from "../components/AuthContext";
 import FormikTextField from "../components/FormikTextField";
@@ -55,7 +56,7 @@ const RegisterView = () => {
             await auth.register(values);
           }}
         >
-          {formik => (
+          {({ isSubmitting }) => (
             <Form>
               <Box sx={{ ...centered, flexDirection: "column" }}>
                 <FormikTextField
@@ -82,17 +83,17 @@ const RegisterView = () => {
                   placeholder="Confirm Password"
                   sx={textFieldStyle}
                 />
-                <Button
+                <LoadingButton
                   type="submit"
                   variant="contained"
-                  color="primary"
+                  loading={isSubmitting}
                   sx={{
                     mt: 2,
                     alignSelf: "flex-end"
                   }}
                 >
-                  Sign Up
-                </Button>
+                  {(isSubmitting && "") || "Sign Up"}
+                </LoadingButton>
               </Box>
             </Form>
           )}
