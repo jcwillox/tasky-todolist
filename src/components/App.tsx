@@ -6,6 +6,8 @@ import { Container, CssBaseline, styled, Theme } from "@mui/material";
 import { SxProps } from "@mui/system";
 import ThemeModeProvider from "./ThemeModeContext";
 import { BrowserRouter } from "react-router-dom";
+import { ErrorBoundary } from "react-error-boundary";
+import ErrorFallbackView from "../views/ErrorFallbackView";
 
 const AppbarOffset = styled("div")(({ theme }) => theme.mixins.toolbar);
 
@@ -28,7 +30,9 @@ function App() {
           <AppHeader />
           <Container maxWidth="md" disableGutters sx={containerStyle}>
             <AppbarOffset />
-            <AppContent />
+            <ErrorBoundary FallbackComponent={ErrorFallbackView}>
+              <AppContent />
+            </ErrorBoundary>
           </Container>
         </BrowserRouter>
       </ThemeModeProvider>
