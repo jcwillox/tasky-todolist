@@ -94,7 +94,6 @@ const LoginView = () => {
               onChange={formik.handleChange}
               color="primary"
               error={formik.touched.password && Boolean(formik.errors.password)}
-              helperText={formik.touched.password && formik.errors.password}
               sx={textFieldStyle}
               InputProps={{
                 endAdornment: (
@@ -132,9 +131,6 @@ const LoginView = () => {
                 type="submit"
                 variant="contained"
                 color="primary"
-                onClick={() =>
-                  auth.login({ username: "david", password: "secret123" })
-                }
                 sx={{
                   mt: 2,
                   alignSelf: "flex-end"
