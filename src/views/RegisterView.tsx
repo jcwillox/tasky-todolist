@@ -8,6 +8,7 @@ import { RegisterConfirmSchema } from "../schemas";
 import { useAuth } from "../components/AuthContext";
 import FormikTextField from "../components/FormikTextField";
 import FormikPasswordField from "../components/FormikPasswordField";
+import { useAsyncError } from "../hooks/use-async";
 
 /**
  * Register Page
@@ -27,6 +28,7 @@ const centered = {
 
 const RegisterView = () => {
   const auth = useAuth();
+  const wrapAsync = useAsyncError();
   return (
     <AppView>
       {/* Outer Border */}
@@ -53,7 +55,7 @@ const RegisterView = () => {
           }}
           validationSchema={RegisterConfirmSchema}
           onSubmit={async values => {
-            await auth.register(values);
+            await wrapAsync(auth.register(values));
           }}
         >
           {({ isSubmitting }) => (
