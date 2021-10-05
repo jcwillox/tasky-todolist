@@ -1,7 +1,7 @@
 import React from "react";
 import { AppBar, Box, styled, Toolbar, Typography } from "@mui/material";
-import DarkModeToggle from "./DarkModeToggle";
 import { ReactComponent as LogoIcon } from "../assets/logo.svg";
+import SettingsMenu from "./SettingsMenu";
 
 const Spacer = styled("span")({ flexGrow: 1 });
 
@@ -37,7 +37,7 @@ const AppHeader = () => {
           Tasky
         </Typography>
         <Spacer />
-        <DarkModeToggle />
+        <SettingsMenu />
       </Toolbar>
     </AppBar>
   );

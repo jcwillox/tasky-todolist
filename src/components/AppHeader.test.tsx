@@ -2,8 +2,8 @@ import React from "react";
 import { render, screen } from "@testing-library/react";
 import AppHeader from "./AppHeader";
 
-jest.mock("./DarkModeToggle", () => {
-  return function DarkModeToggle(props: any) {
+jest.mock("./SettingsMenu", () => {
+  return function SettingsMenu(props: any) {
     return <></>;
   };
 });
