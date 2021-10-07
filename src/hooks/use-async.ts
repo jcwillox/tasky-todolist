@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 
 /**
  * React hook which allows async errors to be passed to the an ErrorBoundary correctly
@@ -6,7 +6,7 @@ import { useState } from "react";
  */
 export const useAsyncError = () => {
   const [, setState] = useState();
-  return async <T>(fn: Promise<T>): Promise<T | undefined> => {
+  return useCallback(async <T>(fn: Promise<T>): Promise<T | undefined> => {
     try {
       return await fn;
     } catch (err) {
@@ -14,5 +14,5 @@ export const useAsyncError = () => {
         throw err;
       });
     }
-  };
+  }, []);
 };
