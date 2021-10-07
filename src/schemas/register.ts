@@ -9,8 +9,7 @@ export const RegisterSchema: SchemaOf<NewUser> = object({
 });
 
 export const RegisterConfirmSchema = RegisterSchema.shape({
-  confirmPassword: string().when("password", {
-    is: val => val && val.length > 0,
-    then: string().oneOf([ref("password")], "Password does not match")
-  })
+  confirmPassword: string()
+    .oneOf([ref("password"), null], "passwords must match")
+    .required("password does not match")
 });
