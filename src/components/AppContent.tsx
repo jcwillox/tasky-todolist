@@ -4,6 +4,7 @@ import TaskView from "../views/TaskView";
 import { useAuth } from "./AuthContext";
 import LoginView from "../views/LoginView";
 import RegisterView from "../views/RegisterView";
+import BoundaryRoute from "./BoundaryRoute";
 
 const AppContent = () => {
   const auth = useAuth();
@@ -11,7 +12,7 @@ const AppContent = () => {
   if (auth.user)
     return (
       <Switch>
-        <Route exact path="/" component={TaskView} />
+        <BoundaryRoute exact path="/" component={TaskView} />
         <Route path="*">
           <Redirect to="/" />
         </Route>
@@ -20,8 +21,8 @@ const AppContent = () => {
 
   return (
     <Switch>
-      <Route exact path="/login" component={LoginView} />
-      <Route exact path="/register" component={RegisterView} />
+      <BoundaryRoute exact path="/login" component={LoginView} />
+      <BoundaryRoute exact path="/register" component={RegisterView} />
       <Route path="*">
         <Redirect to="/login" />
       </Route>
