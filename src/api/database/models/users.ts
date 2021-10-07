@@ -10,7 +10,7 @@ interface UserAttributes extends NewUser {
 
 interface UserCreationAttributes extends Optional<UserAttributes, "id"> {}
 
-export default class User
+export default class UserModel
   extends Model<UserAttributes, UserCreationAttributes>
   implements UserAttributes
 {

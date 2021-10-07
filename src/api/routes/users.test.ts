@@ -1,7 +1,7 @@
 import supertest from "supertest";
 import database from "../database/database";
 import app from "../app";
-import User from "../database/models/users";
+import UserModel from "../database/models/users";
 import jwt from "jwt-promisify";
 import { SECRET_KEY } from "../../config/secret";
 
@@ -22,7 +22,7 @@ beforeEach(() => {
 
 describe("login", () => {
   test("user can login", async () => {
-    const user = await User.create(credentials);
+    const user = await UserModel.create(credentials);
     await api
       .post("/api/login")
       .send(credentials)
@@ -39,7 +39,7 @@ describe("login", () => {
   });
 
   test("user cannot login with invalid password", async () => {
-    await User.create(credentials);
+    await UserModel.create(credentials);
     await api
       .post("/api/login")
       .send({
@@ -131,7 +131,7 @@ describe("register", () => {
 
 describe("validate", () => {
   test("validate is successful for an authenticated user", async () => {
-    await User.create(credentials);
+    await UserModel.create(credentials);
     const res = await api.post("/api/login").send(credentials).expect(200);
     await api
       .get("/api/validate")
@@ -156,7 +156,7 @@ describe("validate", () => {
   });
 
   test("validate fails for non-existent user", async () => {
-    const user = await User.create(credentials);
+    const user = await UserModel.create(credentials);
     // generate valid token first
     const res = await api.post("/api/login").send(credentials).expect(200);
     await user.destroy();

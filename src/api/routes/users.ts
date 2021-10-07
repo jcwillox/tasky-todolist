@@ -1,6 +1,6 @@
 import express, { Request, Response, Router } from "express";
 import jwt from "jwt-promisify";
-import User from "../database/models/users";
+import UserModel from "../database/models/users";
 import { LoginBody } from "../../models/login";
 import { asyncRoute, jwtAuth, yupSchema } from "../middlewares";
 import { LoginBodySchema, RegisterSchema } from "../../schemas";
@@ -16,7 +16,7 @@ router.post(
   asyncRoute(async (req: Request, res: Response) => {
     const { password, username }: LoginBody = req.body;
 
-    const user = await User.findOne({
+    const user = await UserModel.findOne({
       where: {
         username
       }
@@ -36,7 +36,7 @@ router.post(
   "/register",
   yupSchema({ body: RegisterSchema }),
   asyncRoute(async (req: Request, res: Response) => {
-    await User.create(req.body);
+    await UserModel.create(req.body);
     // validation/creation errors have been handled by this point
     return res.sendStatus(200);
   })
@@ -46,7 +46,7 @@ router.get(
   "/validate",
   jwtAuth,
   asyncRoute(async (req: Request, res: Response) => {
-    const user = await User.findByPk(req.user!.id);
+    const user = await UserModel.findByPk(req.user!.id);
     if (user) {
       return res.json(user.details());
     }
