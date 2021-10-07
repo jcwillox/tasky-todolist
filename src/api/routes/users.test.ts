@@ -29,7 +29,6 @@ describe("login", () => {
       .expect(200)
       .then(async res => {
         expect(res.body).toMatchObject({
-          name: null,
           username: user.username
         });
         expect(await jwt.verify(res.body.token, SECRET_KEY)).toMatchObject({

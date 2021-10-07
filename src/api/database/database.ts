@@ -12,7 +12,7 @@ const connect = async () => {
   UserModel.define(sequelize);
 
   await sequelize.authenticate();
-  await sequelize.sync();
+  await sequelize.sync({ alter: { drop: false } });
 };
 
 const disconnect = async () => {

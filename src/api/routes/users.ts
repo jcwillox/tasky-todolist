@@ -25,7 +25,7 @@ router.post(
     if (user && (await user.validatePassword(password)))
       return res.json({
         ...user.details(),
-        token: await jwt.sign({ id: user.id }, SECRET_KEY)
+        token: await jwt.sign({ id: user.id, group: user.group }, SECRET_KEY)
       });
 
     return res.sendStatus(401);
@@ -44,7 +44,7 @@ router.post(
 
 router.get(
   "/validate",
-  jwtAuth,
+  jwtAuth(),
   asyncRoute(async (req: Request, res: Response) => {
     const user = await UserModel.findByPk(req.user!.id);
     if (user) {
