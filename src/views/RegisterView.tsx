@@ -2,13 +2,15 @@ import React from "react";
 import AppFormTitle from "../components/AppFormTitle";
 import AppView from "../components/AppView";
 import { Form, Formik } from "formik";
-import { Box } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import { RegisterConfirmSchema } from "../schemas";
 import { useAuth } from "../components/AuthContext";
 import FormikTextField from "../components/FormikTextField";
 import FormikPasswordField from "../components/FormikPasswordField";
 import { useAsyncError } from "../hooks/use-async";
+import { Link } from "react-router-dom";
+import { inherits } from "util";
 
 /**
  * Register Page
@@ -42,7 +44,8 @@ const RegisterView = () => {
           border: theme => `2px solid ${theme.palette.primary.main}`,
           borderRadius: 3,
           maxWidth: 688,
-          maxHeight: 700
+          maxHeight: 750,
+          p: 2
         }}
       >
         <AppFormTitle title="Create Account" />
@@ -85,17 +88,30 @@ const RegisterView = () => {
                   placeholder="Confirm Password"
                   sx={textFieldStyle}
                 />
-                <LoadingButton
-                  type="submit"
-                  variant="contained"
-                  loading={isSubmitting}
+                <Box
                   sx={{
-                    mt: 2,
-                    alignSelf: "flex-end"
+                    display: "flex",
+                    width: 328,
+                    justifyContent: "space-between",
+                    mt: 2
                   }}
                 >
-                  {(isSubmitting && "") || "Sign Up"}
-                </LoadingButton>
+                  <Button
+                    component={Link}
+                    to="/login"
+                    sx={{ textTransform: "none" }}
+                  >
+                    Sign in instead
+                  </Button>
+                  <LoadingButton
+                    type="submit"
+                    variant="contained"
+                    loading={isSubmitting}
+                    sx={{ textTransform: "none" }}
+                  >
+                    {(isSubmitting && "") || "Create account"}
+                  </LoadingButton>
+                </Box>
               </Box>
             </Form>
           )}
