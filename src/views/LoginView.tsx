@@ -78,7 +78,8 @@ const LoginView = () => {
                     sx={{
                       mt: 2,
                       alignSelf: "flex-start",
-                      paddingLeft: "0px"
+                      paddingLeft: "0px",
+                      textTransform: "none"
                     }}
                   >
                     Create Account
@@ -90,7 +91,8 @@ const LoginView = () => {
                     loading={isSubmitting}
                     sx={{
                       mt: 2,
-                      alignSelf: "flex-end"
+                      alignSelf: "flex-end",
+                      textTransform: "none"
                     }}
                   >
                     {(isSubmitting && "") || "Sign In"}

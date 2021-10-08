@@ -2,15 +2,13 @@ import React from "react";
 import AppFormTitle from "../components/AppFormTitle";
 import AppView from "../components/AppView";
 import { Form, Formik } from "formik";
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import { RegisterConfirmSchema } from "../schemas";
 import { useAuth } from "../components/AuthContext";
 import FormikTextField from "../components/FormikTextField";
 import FormikPasswordField from "../components/FormikPasswordField";
 import { useAsyncError } from "../hooks/use-async";
-import { Link } from "react-router-dom";
-import { inherits } from "util";
 
 /**
  * Register Page
@@ -45,6 +43,7 @@ const RegisterView = () => {
           borderRadius: 3,
           maxWidth: 688,
           maxHeight: 750,
+          my: 1,
           p: 2
         }}
       >
@@ -96,11 +95,7 @@ const RegisterView = () => {
                     mt: 2
                   }}
                 >
-                  <Button
-                    component={Link}
-                    to="/login"
-                    sx={{ textTransform: "none" }}
-                  >
+                  <Button href="/login" sx={{ textTransform: "none" }}>
                     Sign in instead
                   </Button>
                   <LoadingButton
