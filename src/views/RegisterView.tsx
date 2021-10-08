@@ -17,7 +17,7 @@ import { useAsyncError } from "../hooks/use-async";
 
 const textFieldStyle = {
   width: 328,
-  mt: 3
+  mt: 2
 };
 
 const centered = {
