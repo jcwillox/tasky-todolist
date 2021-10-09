@@ -5,10 +5,10 @@ import {
   Divider,
   IconButton,
   ListItemIcon,
+  ListItemText,
   Menu,
   MenuItem,
-  Tooltip,
-  useTheme
+  Tooltip
 } from "@mui/material";
 import Jdenticon from "./Jdenticon";
 import {
@@ -21,12 +21,11 @@ import {
   bindTrigger,
   usePopupState
 } from "material-ui-popup-state/hooks";
-import { useThemeModeToggle } from "./ThemeModeContext";
+import { useThemeMode } from "./ThemeModeContext";
 
 const SettingsMenu = () => {
-  const theme = useTheme();
   const { user, logout } = useAuth();
-  const { toggleThemeMode } = useThemeModeToggle();
+  const { themeMode, switchThemeMode } = useThemeMode();
   const popupState = usePopupState({
     variant: "popover",
     popupId: "settingsMenu"
@@ -48,30 +47,28 @@ const SettingsMenu = () => {
         }}
       >
         {user && (
-          <>
-            <MenuItem
+          <MenuItem
+            sx={{
+              textTransform: "capitalize"
+            }}
+          >
+            <Jdenticon
+              value={user.name || user.username}
+              size={32}
               sx={{
-                textTransform: "capitalize"
+                ml: -0.5,
+                mr: 1
               }}
-            >
-              <Jdenticon
-                value={user.name || user.username}
-                size={32}
-                sx={{
-                  ml: -0.5,
-                  mr: 1
-                }}
-              />
-              {user.name || user.username}
-            </MenuItem>
-            <Divider />
-          </>
+            />
+            {user.name || user.username}
+          </MenuItem>
         )}
-        <MenuItem onClick={toggleThemeMode}>
+        {user && <Divider />}
+        <MenuItem onClick={switchThemeMode}>
           <ListItemIcon>
             <InvertColorsIcon fontSize="small" />
           </ListItemIcon>
-          {capitalize(theme.palette.mode)}
+          <ListItemText>Theme: {capitalize(themeMode)}</ListItemText>
         </MenuItem>
         {user && (
           <MenuItem
