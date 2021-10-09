@@ -70,15 +70,13 @@ const LoginView = () => {
                   sx={{
                     display: "flex",
                     justifyContent: "space-between",
-                    width: "100%"
+                    width: "100%",
+                    mt: 2
                   }}
                 >
                   <Button
                     href="/register"
                     sx={{
-                      mt: 2,
-                      alignSelf: "flex-start",
-                      paddingLeft: "0px",
                       textTransform: "none"
                     }}
                   >
@@ -90,8 +88,6 @@ const LoginView = () => {
                     variant="contained"
                     loading={isSubmitting}
                     sx={{
-                      mt: 2,
-                      alignSelf: "flex-end",
                       textTransform: "none"
                     }}
                   >
