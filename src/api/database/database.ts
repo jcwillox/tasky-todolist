@@ -1,5 +1,4 @@
-import { Sequelize } from "sequelize";
-import UserModel from "./models/users";
+import { Sequelize } from "sequelize-typescript";
 import { SyncOptions } from "sequelize/types/lib/sequelize";
 
 let sequelize: Sequelize | null;
@@ -7,9 +6,10 @@ let sequelize: Sequelize | null;
 const connect = async () => {
   const url = process.env.DATABASE_URL || "sqlite::memory:";
 
-  sequelize = new Sequelize(url, { logging: false });
-
-  UserModel.define(sequelize);
+  sequelize = new Sequelize(url, {
+    logging: false,
+    models: [__dirname + "/models"]
+  });
 
   await sequelize.authenticate();
   await sequelize.sync({ alter: { drop: false } });

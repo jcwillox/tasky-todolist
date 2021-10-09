@@ -1,24 +1,79 @@
-import { DataTypes, Model, Optional, Sequelize } from "sequelize";
+import {
+  Association,
+  DataTypes,
+  HasManyAddAssociationMixin,
+  HasManyCountAssociationsMixin,
+  HasManyCreateAssociationMixin,
+  HasManyGetAssociationsMixin,
+  HasManyHasAssociationMixin,
+  Optional
+} from "sequelize";
 import { NewUser, User } from "../../../models/user";
 import bcrypt from "bcrypt";
+import TaskModel from "./tasks";
+import {
+  AllowNull,
+  BeforeCreate,
+  BeforeUpdate,
+  Column,
+  Default,
+  HasMany,
+  Model,
+  PrimaryKey,
+  Table,
+  Unique
+} from "sequelize-typescript";
 
 const SALT_ROUNDS = 10;
 
 interface UserAttributes extends User, NewUser {}
 interface UserCreationAttributes extends Optional<UserAttributes, "id"> {}
 
+@Table({ tableName: "users" })
 export default class UserModel
   extends Model<UserAttributes, UserCreationAttributes>
   implements UserAttributes
 {
-  public id!: string;
-  public name?: string | null;
-  public group?: string | null;
-  public username!: string;
-  public password!: string;
+  @PrimaryKey
+  @Default(DataTypes.UUIDV4)
+  @Column(DataTypes.UUID)
+  id!: string;
 
-  public readonly createdAt!: Date;
-  public readonly updatedAt!: Date;
+  @Unique
+  @AllowNull(false)
+  @Column(DataTypes.STRING(32))
+  username!: string;
+
+  @Column(DataTypes.STRING(128))
+  name!: string | null;
+
+  @Column(DataTypes.STRING(24))
+  group!: string | null;
+
+  @AllowNull(false)
+  @Column(DataTypes.STRING(60))
+  password!: string;
+
+  readonly createdAt!: Date;
+  readonly updatedAt!: Date;
+
+  @HasMany(() => TaskModel)
+  readonly tasks?: TaskModel[];
+  static associations: {
+    tasks: Association<UserModel, TaskModel>;
+  };
+
+  getTasks!: HasManyGetAssociationsMixin<TaskModel>;
+  addTask!: HasManyAddAssociationMixin<TaskModel, number>;
+  hasTask!: HasManyHasAssociationMixin<TaskModel, number>;
+  countTasks!: HasManyCountAssociationsMixin;
+  createTask!: HasManyCreateAssociationMixin<TaskModel>;
+
+  @BeforeUpdate
+  @BeforeCreate
+  private static async hashPassword(user: UserModel) {
+    user.password = await bcrypt.hash(user.password, SALT_ROUNDS);
+  }
 
   validatePassword(password: string) {
     return bcrypt.compare(password, this.password);
@@ -36,42 +91,5 @@ export default class UserModel
       data["group"] = this.group;
     }
     return data;
-  }
-
-  /** Attach sequelize instance to the model */
-  static define(sequelize: Sequelize) {
-    this.init(
-      {
-        id: {
-          type: DataTypes.UUID,
-          defaultValue: DataTypes.UUIDV4,
-          primaryKey: true
-        },
-        username: {
-          type: DataTypes.STRING(32),
-          allowNull: false,
-          unique: true
-        },
-        name: {
-          type: DataTypes.STRING(128)
-        },
-        group: {
-          type: DataTypes.STRING(24)
-        },
-        password: {
-          type: DataTypes.STRING(60),
-          allowNull: false
-        }
-      },
-      {
-        sequelize,
-        tableName: "users",
-        hooks: {
-          beforeCreate: async user => {
-            user.password = await bcrypt.hash(user.password, SALT_ROUNDS);
-          }
-        }
-      }
-    );
   }
 }
