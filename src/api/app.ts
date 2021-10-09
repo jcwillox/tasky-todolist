@@ -2,6 +2,7 @@ import cors from "cors";
 import express, { Express, Request, Response } from "express";
 import morgan from "morgan";
 import users from "./routes/users";
+import tasks from "./routes/tasks";
 import { errorHandler } from "./middlewares";
 
 const { NODE_ENV } = process.env;
@@ -14,6 +15,7 @@ if (NODE_ENV !== "production" && NODE_ENV !== "test") {
 app.use(express.static("build"));
 app.use(cors());
 app.use("/api", users);
+app.use("/api", tasks);
 app.use("/api", errorHandler);
 
 /** fallback route for all api requests */
