@@ -38,25 +38,25 @@ export const apiJSON = async (
 /** Make a request to the backend API */
 export const api = async (
   endpoint: string,
-  { data, method }: { data?: object; method?: string }
+  options?: { data?: object; method?: string }
 ) => {
-  let options: RequestInit = {
-    method: method || "get",
+  let reqOptions: RequestInit = {
+    method: options?.method || "get",
     headers: {
       Authorization: "Bearer " + localStorage.getItem("token")
     }
   };
-  if (data) {
-    options = {
-      method: "post",
-      body: JSON.stringify(data),
+  if (options?.data) {
+    reqOptions = {
+      method: options?.method || "post",
+      body: JSON.stringify(options.data),
       headers: {
-        ...options.headers,
+        ...reqOptions.headers,
         "Content-Type": "application/json"
       }
     };
   }
-  let res = await fetch("/api" + endpoint, options);
+  let res = await fetch("/api" + endpoint, reqOptions);
   if (!res.ok) {
     if (res.status === 422) {
       const data = await res.json();

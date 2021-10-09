@@ -6,6 +6,7 @@ import { Container, CssBaseline, styled, Theme } from "@mui/material";
 import { SxProps } from "@mui/system";
 import ThemeModeProvider from "./ThemeModeContext";
 import { BrowserRouter } from "react-router-dom";
+import { TaskProvider } from "./TaskContext";
 
 const AppbarOffset = styled("div")(({ theme }) => theme.mixins.toolbar);
 
@@ -22,16 +23,18 @@ const containerStyle: SxProps<Theme> = {
 function App() {
   return (
     <ProvideAuth>
-      <ThemeModeProvider>
-        <CssBaseline />
-        <BrowserRouter>
-          <AppHeader />
-          <Container maxWidth="md" disableGutters sx={containerStyle}>
-            <AppbarOffset />
-            <AppContent />
-          </Container>
-        </BrowserRouter>
-      </ThemeModeProvider>
+      <TaskProvider>
+        <ThemeModeProvider>
+          <CssBaseline />
+          <BrowserRouter>
+            <AppHeader />
+            <Container maxWidth="md" disableGutters sx={containerStyle}>
+              <AppbarOffset />
+              <AppContent />
+            </Container>
+          </BrowserRouter>
+        </ThemeModeProvider>
+      </TaskProvider>
     </ProvideAuth>
   );
 }
