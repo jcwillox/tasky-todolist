@@ -15,6 +15,7 @@ import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import AddIcon from "@mui/icons-material/Add";
+import FormikTextField from "../components/FormikTextField";
 
 const TaskView = () => {
   const { tasks, reload } = useTasks();
@@ -38,7 +39,7 @@ const TaskView = () => {
             <Form>
               <Box>
                 <Box sx={{ mt: 3, display: "flex" }}>
-                  <TextField
+                  <FormikTextField
                     label="Title"
                     variant="standard"
                     sx={{ flex: 2, mr: 2 }}
@@ -55,19 +56,22 @@ const TaskView = () => {
                     />
                   </LocalizationProvider>
                 </Box>
-                <TextField
+                <FormikTextField
                   label="Desciption"
                   variant="standard"
                   fullWidth
                   sx={{ mt: 5 }}
                 />
-                <Button
-                  variant="contained"
-                  startIcon={<AddIcon />}
-                  sx={{ mt: 3, textAlign: "center" }}
-                >
-                  Add Task
-                </Button>
+                <Box sx={{ textAlign: "center", mt: 5 }}>
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    startIcon={<AddIcon />}
+                    sx={{ mt: 3, textAlign: "center" }}
+                  >
+                    Add Task
+                  </Button>
+                </Box>
               </Box>
             </Form>
           )}
