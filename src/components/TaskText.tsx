@@ -1,4 +1,4 @@
-import { ListItemText } from "@mui/material";
+import { Typography, ListItemText } from "@mui/material";
 import React from "react";
 
 type TaskTextProps = {
@@ -11,17 +11,31 @@ type TaskTextProps = {
   };
 };
 
+const prioLevel = (priority: any) => {
+  let str = "";
+  if (priority) {
+    for (let i = 0; i < priority; i++) {
+      str = str.concat("!");
+    }
+  }
+  return str;
+};
+
 const TaskText = ({ task }: TaskTextProps) => {
   return (
     <>
       <ListItemText
-        primary={task.name!}
-        secondary={task.description}
-        sx={{
-          flex: 2
-        }}
+        primary={
+          <Typography>
+            {prioLevel(task.priority)} {task.name!}
+          </Typography>
+        }
+        secondary={
+          <Typography>
+            {task.description} {task.dueAt}
+          </Typography>
+        }
       />
-      <ListItemText primary={task.priority} sx={{ flexGrow: 1 }} />
     </>
   );
 };

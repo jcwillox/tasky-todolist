@@ -42,7 +42,7 @@ const AppTask = ({ task }: AppTaskProps) => {
     >
       <ListItemButton>
         <ListItemIcon>
-          <Checkbox edge="start" disableRipple />
+          <Checkbox edge="start" disableRipple checked={task.completed} />
         </ListItemIcon>
         <TaskText task={task} />
       </ListItemButton>
