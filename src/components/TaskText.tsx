@@ -26,7 +26,7 @@ const TaskText = ({ task }: TaskTextProps) => {
     <>
       <ListItemText
         primary={
-          <Typography sx={textStyle}>
+          <Typography sx={{ ...textStyle, color: "#000", fontWeight: "bold" }}>
             {prioLevel(task.priority)} {task.name}
           </Typography>
         }

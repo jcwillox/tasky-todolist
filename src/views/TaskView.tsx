@@ -90,14 +90,14 @@ const TaskView = () => {
         </List>
       </Box>
 
-      {tasks.map(task => (
+      {/* {tasks.map(task => (
         <div key={task.id}>
           {task.name}
           {task.description && " - " + task.description} {}
           {task.priority}
           {task.dueAt}
         </div>
-      ))}
+      ))} */}
     </React.Fragment>
   );
 };
