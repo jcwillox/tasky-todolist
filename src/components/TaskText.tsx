@@ -17,16 +17,21 @@ const prioLevel = (priority: any) => {
 };
 
 const TaskText = ({ task }: TaskTextProps) => {
+  const textStyle = {
+    color: task.completed ? "#D3D3D3" : "",
+    textDecoration: task.completed ? "line-through" : ""
+  };
+
   return (
     <>
       <ListItemText
         primary={
-          <Typography>
+          <Typography sx={textStyle}>
             {prioLevel(task.priority)} {task.name}
           </Typography>
         }
         secondary={
-          <Typography>
+          <Typography sx={textStyle}>
             {task.description} {task.dueAt}
           </Typography>
         }

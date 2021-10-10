@@ -19,17 +19,6 @@ type AppTaskProps = {
   };
 };
 
-const strike = {
-  position: "relative",
-  "& :before": {
-    content: '" "',
-    position: "absolute",
-    top: "50%",
-    borderBottom: "1px solid #111",
-    width: "100%"
-  }
-};
-
 const AppTask = ({ task }: AppTaskProps) => {
   return (
     <ListItem
