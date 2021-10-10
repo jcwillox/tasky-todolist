@@ -14,16 +14,18 @@ const TaskView = () => {
     <React.Fragment>
       <List>
         {tasks.map(task => (
-          <AppTask task={task} key={task.id} />
+          <>
+            <AppTask task={task} key={task.id} />
+            <Divider />
+          </>
         ))}
-
-        <Divider />
       </List>
 
       {tasks.map(task => (
         <div key={task.id}>
           {task.name}
           {task.description && " - " + task.description} {}
+          {task.priority}
           {task.dueAt}
         </div>
       ))}

@@ -12,13 +12,8 @@ type TaskTextProps = {
 };
 
 const prioLevel = (priority: any) => {
-  let str = "";
-  if (priority) {
-    for (let i = 0; i < priority; i++) {
-      str = str.concat("!");
-    }
-  }
-  return str;
+  const str = "!!!!";
+  return str.substring(priority);
 };
 
 const TaskText = ({ task }: TaskTextProps) => {
@@ -27,7 +22,7 @@ const TaskText = ({ task }: TaskTextProps) => {
       <ListItemText
         primary={
           <Typography>
-            {prioLevel(task.priority)} {task.name!}
+            {prioLevel(task.priority)} {task.name}
           </Typography>
         }
         secondary={
