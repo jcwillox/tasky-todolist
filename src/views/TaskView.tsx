@@ -28,56 +28,6 @@ const TaskView = () => {
 
   return (
     <React.Fragment>
-      <Box sx={{ p: 2 }}>
-        <Typography variant="h3">Add A New To-Do</Typography>
-        <Formik
-          initialValues={{}}
-          validationSchema={TaskSchema}
-          onSubmit={() => console.log()}
-        >
-          {({ isSubmitting }) => (
-            <Form>
-              <Box>
-                <Box sx={{ mt: 3, display: "flex" }}>
-                  <FormikTextField
-                    label="Title"
-                    variant="standard"
-                    sx={{ flex: 2, mr: 2 }}
-                  />
-                  <LocalizationProvider dateAdapter={AdapterDateFns}>
-                    <DesktopDatePicker
-                      label="Due Date"
-                      value={duedate}
-                      minDate={new Date(Date.now())}
-                      onChange={newValue => {
-                        setDuedate(duedate);
-                      }}
-                      renderInput={params => <TextField {...params} />}
-                    />
-                  </LocalizationProvider>
-                </Box>
-                <FormikTextField
-                  label="Desciption"
-                  variant="standard"
-                  fullWidth
-                  sx={{ mt: 5 }}
-                />
-                <Box sx={{ textAlign: "center", mt: 5 }}>
-                  <Button
-                    type="submit"
-                    variant="contained"
-                    startIcon={<AddIcon />}
-                    sx={{ mt: 3, textAlign: "center" }}
-                  >
-                    Add Task
-                  </Button>
-                </Box>
-              </Box>
-            </Form>
-          )}
-        </Formik>
-      </Box>
-
       <Box sx={{ mt: 5, p: 2 }}>
         <Typography variant="h3">To-Do List</Typography>
         <List>
