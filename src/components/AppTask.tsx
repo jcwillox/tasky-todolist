@@ -4,31 +4,52 @@ import {
   ListItem,
   ListItemButton,
   ListItemIcon,
+  ListItemText,
   Typography
 } from "@mui/material";
-import React from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
-import TaskText from "./TaskText";
+import { Task } from "../models/task";
 
 type AppTaskProps = {
-  task: {
-    name: string;
-    completed: boolean;
-    description?: string | null | undefined;
-    priority?: number | null | undefined;
-    dueAt?: Date | undefined | null;
-  };
+  task: Task;
 };
 
-const AppTask = ({ task }: AppTaskProps) => {
+const TaskText = ({ task }: AppTaskProps) => {
+  const textStyle = {
+    color: task.completed ? "text.secondary" : "text.primary",
+    textDecoration: task.completed ? "line-through" : ""
+  };
+
+  return (
+    <>
+      <ListItemText
+        primary={
+          <Typography
+            sx={{ ...textStyle, color: "text.primary", fontWeight: "bold" }}
+          >
+            {"!".repeat(4 - task.priority)} {task.name}
+          </Typography>
+        }
+        secondary={
+          <Typography sx={textStyle}>
+            {task.description} {task.dueAt}
+          </Typography>
+        }
+      />
+    </>
+  );
+};
+
+const TaskItem = ({ task }: AppTaskProps) => {
   return (
     <ListItem
       secondaryAction={
-        <IconButton edge="end" aria-label="comments">
+        <IconButton edge="end">
           <DeleteIcon />
         </IconButton>
       }
       disablePadding
+      divider
     >
       <ListItemButton>
         <ListItemIcon>
@@ -40,4 +61,4 @@ const AppTask = ({ task }: AppTaskProps) => {
   );
 };
 
-export default AppTask;
+export default TaskItem;

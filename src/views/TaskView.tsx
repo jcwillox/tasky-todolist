@@ -1,12 +1,10 @@
-import { Box, Divider, List, Typography } from "@mui/material";
-import React, { useEffect, useState } from "react";
-import AppTask from "../components/AppTask";
+import { Box, List, Typography } from "@mui/material";
+import React, { useEffect } from "react";
+import TaskItem from "../components/AppTask";
 import { useTasks } from "../components/TaskContext";
 
 const TaskView = () => {
   const { tasks, reload } = useTasks();
-
-  const [duedate, setDuedate] = useState();
 
   useEffect(() => {
     reload();
@@ -18,22 +16,10 @@ const TaskView = () => {
         <Typography variant="h3">To-Do List</Typography>
         <List>
           {tasks.map(task => (
-            <>
-              <AppTask task={task} key={task.id} />
-              <Divider />
-            </>
+            <TaskItem task={task} key={task.id} />
           ))}
         </List>
       </Box>
-
-      {/* {tasks.map(task => (
-        <div key={task.id}>
-          {task.name}
-          {task.description && " - " + task.description} {}
-          {task.priority}
-          {task.dueAt}
-        </div>
-      ))} */}
     </React.Fragment>
   );
 };
