@@ -38,7 +38,11 @@ export default class TaskModel
 
   @ForeignKey(() => UserModel)
   @AllowNull(false)
-  @Column(DataTypes.UUID)
+  @Column({
+    type: DataTypes.UUID,
+    references: { model: UserModel, key: "id" },
+    onDelete: "CASCADE"
+  })
   userId!: string;
 
   @AllowNull(false)
