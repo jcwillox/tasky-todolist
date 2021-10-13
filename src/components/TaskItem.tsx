@@ -8,12 +8,25 @@ import {
   Typography
 } from "@mui/material";
 import CircleCheckedFilled from "@mui/icons-material/CheckCircle";
-import CircleUnchecked from "@mui/icons-material/RadioButtonUnchecked";
+import CircleUnchecked from "@mui/icons-material/CheckCircle";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { Task } from "../models/task";
 
 type TaskItemProps = {
   task: Task;
+};
+
+const getPriorityColor = priority => {
+  switch (priority) {
+    case 1:
+      return "red";
+    case 2:
+      return "orange";
+    case 3:
+      return "blue";
+    case 4:
+      return "";
+  }
 };
 
 const TaskItem = ({ task }: TaskItemProps) => {
@@ -36,6 +49,9 @@ const TaskItem = ({ task }: TaskItemProps) => {
             checked={task.completed}
             icon={<CircleUnchecked />}
             checkedIcon={<CircleCheckedFilled />}
+            style={{
+              color: `${getPriorityColor(task.priority)}`
+            }}
           />
         </ListItemIcon>
         <ListItemText
