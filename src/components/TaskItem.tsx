@@ -1,70 +1,80 @@
+import React from "react";
 import {
-  Checkbox,
+  Box,
   IconButton,
   ListItem,
-  ListItemButton,
-  ListItemIcon,
   ListItemText,
   Typography
 } from "@mui/material";
-import CircleCheckedFilled from "@mui/icons-material/CheckCircle";
-import CircleUnchecked from "@mui/icons-material/CheckCircle";
-import DeleteIcon from "@mui/icons-material/Delete";
 import { Task } from "../models/task";
+import { amber, blue, red } from "@mui/material/colors";
+import {
+  CheckCircleRounded as CheckCircleRoundedIcon,
+  MoreVert as MoreVertIcon
+} from "@mui/icons-material";
 
 type TaskItemProps = {
   task: Task;
 };
 
-const getPriorityColor = priority => {
-  switch (priority) {
-    case 1:
-      return "red";
-    case 2:
-      return "orange";
-    case 3:
-      return "blue";
-    case 4:
-      return "";
-  }
+const CircleIcon = ({ priority }: { priority: number }) => {
+  const color = [red[500], amber[600], blue[500], ""][priority - 1];
+  return (
+    <Box
+      sx={{
+        width: 20,
+        height: 20,
+        borderRadius: "50%",
+        border: `2px solid ${color}`,
+        backgroundColor: color && `${color}10`,
+        margin: "2px"
+      }}
+    />
+  );
 };
 
 const TaskItem = ({ task }: TaskItemProps) => {
   return (
     <ListItem
+      sx={{
+        "& .MuiListItemSecondaryAction-root": {
+          display: "none"
+        },
+        "&:hover .MuiListItemSecondaryAction-root": {
+          display: "block"
+        }
+      }}
       secondaryAction={
         <IconButton edge="end">
-          <DeleteIcon />
+          <MoreVertIcon />
         </IconButton>
       }
-      disablePadding
       divider
       dense
     >
-      <ListItemButton>
-        <ListItemIcon>
-          <Checkbox
-            edge="start"
-            disableRipple
-            checked={task.completed}
-            icon={<CircleUnchecked />}
-            checkedIcon={<CircleCheckedFilled />}
-            style={{
-              color: `${getPriorityColor(task.priority)}`
-            }}
-          />
-        </ListItemIcon>
-        <ListItemText
-          primary={
-            <Typography
-              sx={{ textDecoration: task.completed ? "line-through" : "" }}
-            >
-              {"!".repeat(4 - task.priority)} {task.name}
-            </Typography>
-          }
-          secondary={`${task.description || ""} ${task.dueAt || ""}`}
-        />
-      </ListItemButton>
+      <IconButton
+        sx={{
+          marginLeft: -1
+        }}
+      >
+        {task.completed ? (
+          <CheckCircleRoundedIcon color="primary" />
+        ) : (
+          <CircleIcon priority={task.priority} />
+        )}
+      </IconButton>
+      <ListItemText
+        sx={{
+          textDecoration: task.completed ? "line-through" : "",
+          paddingLeft: 2
+        }}
+        primary={
+          <Typography sx={{ fontWeight: "bold" }}>{task.name}</Typography>
+        }
+        secondary={`${task.description || ""} ${
+          task.dueAt ? `(${task.dueAt.toLocaleString()})` : ""
+        }`}
+      />
     </ListItem>
   );
 };
