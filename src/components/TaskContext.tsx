@@ -18,6 +18,20 @@ const parseDates = (json: any[]) => {
   return json;
 };
 
+const formatTasks = (tasks: Task[], dates?: boolean) => {
+  if (dates) parseDates(tasks);
+  tasks.sort((t1, t2) => {
+    // sort by completed
+    if (t1.completed > t2.completed) return 1;
+    if (t1.completed < t2.completed) return -1;
+    // sort by name
+    if (t1.name > t2.name) return 1;
+    if (t1.name < t2.name) return -1;
+    return 0;
+  });
+  return tasks;
+};
+
 const useProvideTasks = () => {
   const [localTasks, setLocalTasks] = useLocalStorageState<Task[]>("tasks", []);
   const [tasks, setTasks] = useState<Task[]>(parseDates(localTasks));
@@ -39,7 +53,7 @@ const useProvideTasks = () => {
 
   const reload = useCallback(async () => {
     setIsReloading(true);
-    setTasks(parseDates(await apiJSON("/tasks")));
+    setTasks(formatTasks(await apiJSON("/tasks"), true));
     setIsReloading(false);
   }, [setTasks]);
 
