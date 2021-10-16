@@ -9,11 +9,34 @@ import { cookiesAsString, cookiesObject } from "../../utils";
 const api = supertest(app);
 
 const credentials = {
+  id: "ceca4fd9-249e-4321-bf85-854d0d22a6fc",
   username: "john",
   password: "smith123"
 };
 
-beforeAll(database.connect);
+const credentialsAdmin = {
+  id: "3786a4c5-4423-4cea-ac36-cc49c7348329",
+  username: "admin",
+  password: "12345678",
+  group: "admin"
+};
+
+let cookies: string;
+let cookiesAdmin: string;
+let user: UserModel;
+
+beforeAll(async () => {
+  await database.connect();
+  await UserModel.create(credentials);
+  await UserModel.create(credentialsAdmin);
+  cookies = cookiesAsString(
+    await api.post("/api/login").send(credentials).expect(200)
+  );
+  cookiesAdmin = cookiesAsString(
+    await api.post("/api/login").send(credentialsAdmin).expect(200)
+  );
+});
+
 afterAll(database.disconnect);
 
 beforeEach(() => {
@@ -22,8 +45,11 @@ beforeEach(() => {
 });
 
 describe("login", () => {
+  beforeEach(async () => {
+    user = await UserModel.create(credentials);
+  });
+
   test("user can login", async () => {
-    const user = await UserModel.create(credentials);
     await api
       .post("/api/login")
       .send(credentials)
@@ -41,7 +67,6 @@ describe("login", () => {
   });
 
   test("user cannot login with invalid password", async () => {
-    await UserModel.create(credentials);
     await api
       .post("/api/login")
       .send({
@@ -134,11 +159,7 @@ describe("register", () => {
 describe("validate", () => {
   test("validate is successful for an authenticated user", async () => {
     await UserModel.create(credentials);
-    const res = await api.post("/api/login").send(credentials).expect(200);
-    await api
-      .get("/api/validate")
-      .set("cookie", cookiesAsString(res))
-      .expect(200);
+    await api.get("/api/validate").set("cookie", cookies).expect(200);
   });
 
   test("validate fails for invalid token", async () => {
@@ -158,13 +179,88 @@ describe("validate", () => {
   });
 
   test("validate fails for non-existent user", async () => {
-    const user = await UserModel.create(credentials);
-    // generate valid token first
-    const res = await api.post("/api/login").send(credentials).expect(200);
-    await user.destroy();
+    await api.get("/api/validate").set("cookie", cookies).expect(401);
+  });
+});
+
+describe("edit", () => {
+  beforeEach(async () => {
+    user = await UserModel.create(credentials);
+  });
+
+  test("can update user details", async () => {
     await api
-      .get("/api/validate")
-      .set("cookie", cookiesAsString(res))
+      .put("/api/user")
+      .set("cookie", cookies)
+      .send({
+        name: "David",
+        username: "david",
+        group: "admin" // this should not be set
+      })
+      .expect(200);
+    await user.reload();
+    expect(user.details()).toEqual({
+      id: user.id,
+      name: "David",
+      username: "david"
+    });
+  });
+
+  test("can update another users details", async () => {
+    await api
+      .put(`/api/user/${user.id}`)
+      .set("cookie", cookiesAdmin)
+      .send({
+        name: "David",
+        username: "david",
+        group: "admin"
+      })
+      .expect(200);
+    await user.reload();
+    expect(user.details()).toEqual({
+      id: user.id,
+      name: "David",
+      username: "david",
+      group: "admin"
+    });
+  });
+
+  test("can change user password", async () => {
+    await api
+      .post("/api/user/password")
+      .set("cookie", cookies)
+      .send({
+        password: credentials.password,
+        newPassword: credentialsAdmin.password
+      })
+      .expect(200);
+    await user.reload();
+    expect(await user.validatePassword("12345678")).toBe(true);
+  });
+
+  test("cannot change password with invalid old password", async () => {
+    await api
+      .post("/api/user/password")
+      .set("cookie", cookies)
+      .send({
+        password: "notMyPassword",
+        newPassword: credentialsAdmin.password
+      })
       .expect(401);
+    await user.reload();
+    expect(await user.validatePassword(credentialsAdmin.password)).toBe(false);
+  });
+
+  test("can delete user", async () => {
+    await api.delete("/api/user").set("cookie", cookies).expect(200);
+    await expect(user.reload()).rejects.toThrow(/does not exist anymore/);
+  });
+
+  test("can delete another user as an admin", async () => {
+    await api
+      .delete(`/api/user/${user.id}`)
+      .set("cookie", cookiesAdmin)
+      .expect(200);
+    await expect(user.reload()).rejects.toThrow(/does not exist anymore/);
   });
 });

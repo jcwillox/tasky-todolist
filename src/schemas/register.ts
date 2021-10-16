@@ -13,3 +13,17 @@ export const RegisterConfirmSchema = RegisterSchema.shape({
     .oneOf([ref("password"), null], "passwords must match")
     .required("password does not match")
 });
+
+export const EditUserSchema = object({
+  name: string().optional().max(128),
+  username: string().required().max(32)
+});
+
+export const EditUserAdminSchema = EditUserSchema.shape({
+  group: string().nullable().max(24)
+});
+
+export const ChangePasswordSchema = object({
+  password: string().required().min(8).max(60),
+  newPassword: string().required().min(8).max(60)
+});
