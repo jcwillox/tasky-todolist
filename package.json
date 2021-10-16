@@ -23,7 +23,7 @@
     "lint:fix": "eslint src/ --fix",
     "format": "prettier src/ --write",
     "format:check": "prettier src/ --check",
-    "db:seed": "ts-node -P tsconfig.api.json src/api/create-database.ts",
+    "db:seed": "ts-node -P tsconfig.api.json src/api/seed-database.ts",
     "eject": "react-scripts eject"
   },
   "dependencies": {

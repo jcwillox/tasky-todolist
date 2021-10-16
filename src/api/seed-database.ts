@@ -6,6 +6,17 @@ if (!process.env.DATABASE_URL) {
   process.env.DATABASE_URL = "sqlite:src/api/db.sqlite";
 }
 
+const bulkDeleteAndCreate = async (
+  records: UserModel["_creationAttributes"][]
+) => {
+  await UserModel.destroy({
+    where: {
+      username: records.map(record => record.username)
+    }
+  });
+  await UserModel.bulkCreate(records);
+};
+
 console.log("DATABASE:", process.env.DATABASE_URL);
 
 (async () => {
@@ -21,8 +32,23 @@ console.log("DATABASE:", process.env.DATABASE_URL);
     id: "15d0fdf1-a589-4144-8703-77eafedd574b",
     username: "david",
     name: "David",
-    password: "12345678"
+    password: "12345678",
+    group: "admin"
   });
+  /* add additional users */
+  await bulkDeleteAndCreate([
+    { name: "User 1", username: "user1", password: "12345678" },
+    { name: "User 2", username: "user2", password: "12345678" },
+    { name: "User 3", username: "user3", password: "12345678" },
+    { name: "User 4", username: "user4", password: "12345678" },
+    { name: "User 5", username: "user5", password: "12345678" },
+    {
+      name: "Secret Admin",
+      username: "secret_admin",
+      password: "12345678",
+      group: "admin"
+    }
+  ]);
   /* add default tasks */
   await TaskModel.bulkCreate([
     {
