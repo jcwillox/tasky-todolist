@@ -12,6 +12,7 @@ import {
   CheckCircleRounded as CheckCircleRoundedIcon,
   MoreVert as MoreVertIcon
 } from "@mui/icons-material";
+import { useTasks } from "./TaskContext";
 
 type TaskItemProps = {
   task: Task;
@@ -34,6 +35,7 @@ const CircleIcon = ({ priority }: { priority: number }) => {
 };
 
 const TaskItem = ({ task }: TaskItemProps) => {
+  const { toggleCompleted } = useTasks();
   return (
     <ListItem
       sx={{
@@ -56,6 +58,7 @@ const TaskItem = ({ task }: TaskItemProps) => {
         sx={{
           marginLeft: -1
         }}
+        onClick={() => toggleCompleted(task)}
       >
         {task.completed ? (
           <CheckCircleRoundedIcon color="primary" />
