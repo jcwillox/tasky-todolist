@@ -4,6 +4,7 @@ import {
   capitalize,
   Divider,
   IconButton,
+  Link,
   ListItemIcon,
   ListItemText,
   Menu,
@@ -12,6 +13,7 @@ import {
 } from "@mui/material";
 import Jdenticon from "./Jdenticon";
 import {
+  AdminPanelSettings as AdminPanelSettingsIcon,
   InvertColors as InvertColorsIcon,
   Logout as LogoutIcon,
   MoreVert as MoreVertIcon
@@ -61,6 +63,14 @@ const SettingsMenu = () => {
               }}
             />
             {user.name || user.username}
+          </MenuItem>
+        )}
+        {user?.group === "admin" && (
+          <MenuItem component={Link} href="/admin" onClick={popupState.close}>
+            <ListItemIcon>
+              <AdminPanelSettingsIcon fontSize="small" />
+            </ListItemIcon>
+            Admin Panel
           </MenuItem>
         )}
         {user && <Divider />}

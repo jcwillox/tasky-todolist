@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense } from "react";
 import AppHeader from "./AppHeader";
 import AppContent from "./AppContent";
 import { ProvideAuth } from "./AuthContext";
@@ -30,7 +30,9 @@ function App() {
             <AppHeader />
             <Container maxWidth="md" disableGutters sx={containerStyle}>
               <AppbarOffset />
-              <AppContent />
+              <Suspense fallback={<div>Loading...</div>}>
+                <AppContent />
+              </Suspense>
             </Container>
           </BrowserRouter>
         </ThemeModeProvider>
