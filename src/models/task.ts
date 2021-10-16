@@ -12,6 +12,8 @@ export interface BaseTask extends NewTask {
   dueAt?: Date | null;
 }
 
+export interface EditTask extends Partial<Omit<BaseTask, "id">> {}
+
 export interface Task extends BaseTask {
   createdAt: Date;
   updatedAt: Date;

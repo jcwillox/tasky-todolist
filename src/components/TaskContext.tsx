@@ -4,10 +4,11 @@ import React, {
   useCallback,
   useContext,
   useEffect,
+  useMemo,
   useState
 } from "react";
-import { apiJSON } from "../utils/fetch";
-import { Task } from "../models/task";
+import { api, apiJSON } from "../utils/fetch";
+import { EditTask, Task } from "../models/task";
 import { useLocalStorageState } from "use-local-storage-state";
 
 /** Deserialize date fields from strings to Date objects */
@@ -55,9 +56,44 @@ const useProvideTasks = () => {
     setIsReloading(true);
     setTasks(formatTasks(await apiJSON("/tasks"), true));
     setIsReloading(false);
-  }, [setTasks]);
+  }, []);
 
-  return { tasks, reload, isReloading };
+  const deleteTask = useCallback(async (task: Task) => {
+    await api(`/task/${task.id}`, { method: "delete" });
+    setTasks(tasks => tasks.filter(t => t.id !== task.id));
+  }, []);
+
+  const updateTask = useCallback(async (task: Task, values: EditTask) => {
+    const lastTask = Object.assign({}, task);
+    Object.assign(task, values);
+    setTasks(tasks => formatTasks([...tasks]));
+    try {
+      await api(`/task/${task.id}`, { method: "put", data: values });
+    } catch (err) {
+      // restore original values
+      Object.assign(task, lastTask);
+      setTasks(tasks => formatTasks([...tasks]));
+    }
+  }, []);
+
+  const toggleCompleted = useCallback(
+    (task: Task) => {
+      return updateTask(task, { completed: !task.completed });
+    },
+    [updateTask]
+  );
+
+  return useMemo(
+    () => ({
+      tasks,
+      reload,
+      isReloading,
+      toggleCompleted,
+      updateTask,
+      deleteTask
+    }),
+    [deleteTask, isReloading, reload, tasks, toggleCompleted, updateTask]
+  );
 };
 
 export const useTasks = () => {
