@@ -3,7 +3,8 @@ import database from "../database/database";
 import app from "../app";
 import UserModel from "../database/models/users";
 import jwt from "jwt-promisify";
-import { SECRET_KEY } from "../../config/secret";
+import { SECRET_KEY } from "../../config";
+import { cookiesAsString, cookiesObject } from "../../utils";
 
 const api = supertest(app);
 
@@ -31,7 +32,9 @@ describe("login", () => {
         expect(res.body).toMatchObject({
           username: user.username
         });
-        expect(await jwt.verify(res.body.token, SECRET_KEY)).toMatchObject({
+        expect(
+          await jwt.verify(cookiesObject(res).token, SECRET_KEY)
+        ).toMatchObject({
           id: user.id
         });
       });
@@ -134,7 +137,7 @@ describe("validate", () => {
     const res = await api.post("/api/login").send(credentials).expect(200);
     await api
       .get("/api/validate")
-      .set("Authorization", "Bearer " + res.body.token)
+      .set("cookie", cookiesAsString(res))
       .expect(200);
   });
 
@@ -142,15 +145,15 @@ describe("validate", () => {
     await api
       .get("/api/validate")
       .set(
-        "Authorization",
-        "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9" +
+        "cookie",
+        "token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9" +
           ".eyJpZCI6IjA2MDljOWE0LTlkMzAtNDYyNi04YjA3LTdiZWU0NTg5MTdiMCIsImlhdCI6MTYzMzE1NzY2Nn0" +
           ".VZLeOtnxTvqn61Ha9Vu_Xe2Njf3W32Mdj7wkTGappCA"
       )
       .expect(401);
   });
 
-  test("validate fails missing header", async () => {
+  test("validate fails for missing auth cookie", async () => {
     await api.get("/api/validate").expect(401);
   });
 
@@ -161,7 +164,7 @@ describe("validate", () => {
     await user.destroy();
     await api
       .get("/api/validate")
-      .set("Authorization", "Bearer " + res.body.token)
+      .set("cookie", cookiesAsString(res))
       .expect(401);
   });
 });

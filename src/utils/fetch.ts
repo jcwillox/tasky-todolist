@@ -42,16 +42,13 @@ export const api = async (
 ) => {
   let reqOptions: RequestInit = {
     method: options?.method || "get",
-    headers: {
-      Authorization: "Bearer " + localStorage.getItem("token")
-    }
+    credentials: "same-origin"
   };
   if (options?.data) {
     reqOptions = {
       method: options?.method || "post",
       body: JSON.stringify(options.data),
       headers: {
-        ...reqOptions.headers,
         "Content-Type": "application/json"
       }
     };

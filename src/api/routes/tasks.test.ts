@@ -3,6 +3,7 @@ import database from "../database/database";
 import app from "../app";
 import UserModel from "../database/models/users";
 import TaskModel from "../database/models/tasks";
+import { cookiesAsString } from "../../utils";
 
 const api = supertest(app);
 
@@ -12,14 +13,14 @@ const credentials = {
   password: "smith123"
 };
 
-let token: string;
+let cookies: string;
 let user: UserModel;
 
 beforeAll(async () => {
   await database.connect();
   await UserModel.create(credentials);
   const res = await api.post("/api/login").send(credentials).expect(200);
-  token = res.body.token;
+  cookies = cookiesAsString(res);
 });
 
 afterAll(database.disconnect);
@@ -49,7 +50,7 @@ describe("tasks", () => {
   test("can create a task", async () => {
     const res = await api
       .post(`/api/tasks`)
-      .set("Authorization", "Bearer " + token)
+      .set("cookie", cookies)
       .send({
         name: "Task",
         description: "A task",
@@ -73,7 +74,7 @@ describe("tasks", () => {
   test("cannot create a task with invalid fields", async () => {
     await api
       .post(`/api/tasks`)
-      .set("Authorization", "Bearer " + token)
+      .set("cookie", cookies)
       .send({
         priority: 5,
         dueAt: "today"
@@ -106,7 +107,7 @@ describe("tasks", () => {
     });
     await api
       .get(`/api/task/${task.id}`)
-      .set("Authorization", "Bearer " + token)
+      .set("cookie", cookies)
       .expect(200)
       .expect({
         id: task.id,
@@ -121,7 +122,7 @@ describe("tasks", () => {
   test("cannot retrieve a task that doesnt exist", async () => {
     await api
       .get("/api/task/0c61056c-0871-4ede-a80a-8a3c0b2e7691")
-      .set("Authorization", "Bearer " + token)
+      .set("cookie", cookies)
       .expect(404);
   });
 
@@ -134,7 +135,7 @@ describe("tasks", () => {
     });
     await api
       .get("/api/tasks")
-      .set("Authorization", "Bearer " + token)
+      .set("cookie", cookies)
       .expect(200)
       .expect(
         JSON.parse(
@@ -150,7 +151,7 @@ describe("tasks", () => {
     expect(task.completed).toBe(false);
     await api
       .post(`/api/task/${task.id}/complete`)
-      .set("Authorization", "Bearer " + token)
+      .set("cookie", cookies)
       .expect(200);
     await task.reload();
     expect(task.completed).toBe(true);
@@ -164,7 +165,7 @@ describe("tasks", () => {
     expect(task.completed).toBe(true);
     await api
       .post(`/api/task/${task.id}/uncomplete`)
-      .set("Authorization", "Bearer " + token)
+      .set("cookie", cookies)
       .expect(200);
     await task.reload();
     expect(task.completed).toBe(false);
@@ -176,7 +177,7 @@ describe("tasks", () => {
     });
     await api
       .put(`/api/task/${task.id}`)
-      .set("Authorization", "Bearer " + token)
+      .set("cookie", cookies)
       .send({
         priority: 1,
         completed: true
@@ -197,10 +198,7 @@ describe("tasks", () => {
     const task = await user.createTask({
       name: "Task"
     });
-    await api
-      .delete(`/api/task/${task.id}`)
-      .set("Authorization", "Bearer " + token)
-      .expect(200);
+    await api.delete(`/api/task/${task.id}`).set("cookie", cookies).expect(200);
     await expect(task.reload()).rejects.toThrow(/does not exist anymore/);
   });
 });

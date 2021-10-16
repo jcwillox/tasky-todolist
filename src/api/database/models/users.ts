@@ -9,6 +9,7 @@ import {
   Optional
 } from "sequelize";
 import { NewUser, User } from "../../../models/user";
+import { SALT_ROUNDS } from "../../../config";
 import bcrypt from "bcrypt";
 import TaskModel from "./tasks";
 import {
@@ -23,8 +24,6 @@ import {
   Table,
   Unique
 } from "sequelize-typescript";
-
-const SALT_ROUNDS = 10;
 
 interface UserAttributes extends User, NewUser {}
 interface UserCreationAttributes extends Optional<UserAttributes, "id"> {}

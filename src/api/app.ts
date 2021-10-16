@@ -4,16 +4,18 @@ import morgan from "morgan";
 import users from "./routes/users";
 import tasks from "./routes/tasks";
 import { errorHandler } from "./middlewares";
+import cookieParser from "cookie-parser";
+import { DEVELOPMENT } from "../config";
 
-const { NODE_ENV } = process.env;
 const app: Express = express();
 
-if (NODE_ENV !== "production" && NODE_ENV !== "test") {
+if (DEVELOPMENT) {
   app.use(morgan("dev"));
 }
 
 app.use(express.static("build"));
 app.use(cors());
+app.use("/api", cookieParser());
 app.use("/api", users);
 app.use("/api", tasks);
 app.use("/api", errorHandler);

@@ -6,8 +6,8 @@ import React, {
   useEffect
 } from "react";
 import { NewUser, User } from "../models/user";
-import { LoginBody, LoginResponse } from "../models/login";
-import { api, apiJSON, ApiError } from "../utils/fetch";
+import { LoginBody } from "../models/login";
+import { api, ApiError, apiJSON } from "../utils/fetch";
 import { useLocalStorageState } from "use-local-storage-state";
 
 const useProvideAuth = () => {
@@ -15,19 +15,14 @@ const useProvideAuth = () => {
 
   const login = useCallback(
     async (credentials: LoginBody) => {
-      const data: LoginResponse = await apiJSON("/login", credentials);
-      localStorage.setItem("token", data.token);
-
-      let user: User = data;
-      delete user["token"];
-
-      setUser(user);
+      setUser(await apiJSON("/login", credentials));
     },
     [setUser]
   );
 
   const logout = useCallback(async () => {
-    localStorage.removeItem("token");
+    await api("/logout", { method: "post" });
+    localStorage.removeItem("tasks");
     removeItem();
   }, [removeItem]);
 

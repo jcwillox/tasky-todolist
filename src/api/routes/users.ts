@@ -4,7 +4,18 @@ import UserModel from "../database/models/users";
 import { LoginBody } from "../../models/login";
 import { asyncRoute, jwtAuth, yupSchema } from "../middlewares";
 import { LoginBodySchema, RegisterSchema } from "../../schemas";
-import { SECRET_KEY } from "../../config/secret";
+import { COOKIE_TOKEN_NAME, DEVELOPMENT, SECRET_KEY } from "../../config";
+import { CookieOptions } from "express-serve-static-core";
+
+const cookieToken = async (
+  user: UserModel
+): Promise<[string, string, CookieOptions]> => {
+  return [
+    COOKIE_TOKEN_NAME,
+    await jwt.sign({ id: user.id, group: user.group }, SECRET_KEY),
+    { sameSite: "lax", httpOnly: true, secure: !DEVELOPMENT }
+  ];
+};
 
 const router = Router();
 
@@ -23,14 +34,14 @@ router.post(
     });
 
     if (user && (await user.validatePassword(password)))
-      return res.json({
-        ...user.details(),
-        token: await jwt.sign({ id: user.id, group: user.group }, SECRET_KEY)
-      });
-
+      return res.cookie(...(await cookieToken(user))).json(user.details());
     return res.sendStatus(401);
   })
 );
+
+router.post("/logout", (req: Request, res: Response) => {
+  return res.clearCookie(COOKIE_TOKEN_NAME).sendStatus(200);
+});
 
 router.post(
   "/register",
@@ -48,9 +59,9 @@ router.get(
   asyncRoute(async (req: Request, res: Response) => {
     const user = await UserModel.findByPk(req.user!.id);
     if (user) {
-      return res.json(user.details());
+      return res.cookie(...(await cookieToken(user))).json(user.details());
     }
-    return res.sendStatus(401);
+    return res.clearCookie(COOKIE_TOKEN_NAME).sendStatus(401);
   })
 );
 
