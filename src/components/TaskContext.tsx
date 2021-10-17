@@ -1,6 +1,8 @@
 import React, {
   createContext,
+  Dispatch,
   FunctionComponent,
+  SetStateAction,
   useCallback,
   useContext,
   useEffect,
@@ -8,14 +10,16 @@ import React, {
   useState
 } from "react";
 import { api, apiJSON } from "../utils/fetch";
-import { EditTask, Task } from "../models/task";
+import { EditTask, NewTask, Task } from "../models/task";
 import { useLocalStorageState } from "use-local-storage-state";
 
 /** Deserialize date fields from strings to Date objects */
 const parseDates = (json: any[]) => {
   for (const o of json)
     for (const field of ["dueAt", "createdAt", "updatedAt"])
-      o[field] && (o[field] = new Date(o[field]));
+      if (typeof o[field] === "string") {
+        o[field] = new Date(o[field]);
+      }
   return json;
 };
 
@@ -33,10 +37,9 @@ const formatTasks = (tasks: Task[], dates?: boolean) => {
   return tasks;
 };
 
-const useProvideTasks = () => {
+const useLocalTaskLink = (): [Task[], Dispatch<SetStateAction<Task[]>>] => {
   const [localTasks, setLocalTasks] = useLocalStorageState<Task[]>("tasks", []);
   const [tasks, setTasks] = useState<Task[]>(parseDates(localTasks));
-  const [isReloading, setIsReloading] = useState(false);
 
   // the following use effect hooks facilitate syncing tasks with local storage
   // while also deserializing the task dates when retrieved from local storage
@@ -52,29 +55,50 @@ const useProvideTasks = () => {
     }
   }, [tasks]); // eslint-disable-line
 
+  return [tasks, setTasks];
+};
+
+const useProvideTasks = () => {
+  const [tasks, setTasks] = useLocalTaskLink();
+  const [isReloading, setIsReloading] = useState(false);
+
   const reload = useCallback(async () => {
     setIsReloading(true);
     setTasks(formatTasks(await apiJSON("/tasks"), true));
     setIsReloading(false);
-  }, []);
+  }, [setTasks]);
 
-  const deleteTask = useCallback(async (task: Task) => {
-    await api(`/task/${task.id}`, { method: "delete" });
-    setTasks(tasks => tasks.filter(t => t.id !== task.id));
-  }, []);
+  const deleteTask = useCallback(
+    async (task: Task) => {
+      await api(`/task/${task.id}`, { method: "delete" });
+      setTasks(tasks => tasks.filter(t => t.id !== task.id));
+    },
+    [setTasks]
+  );
 
-  const updateTask = useCallback(async (task: Task, values: EditTask) => {
-    const lastTask = Object.assign({}, task);
-    Object.assign(task, values);
-    setTasks(tasks => formatTasks([...tasks]));
-    try {
-      await api(`/task/${task.id}`, { method: "put", data: values });
-    } catch (err) {
-      // restore original values
-      Object.assign(task, lastTask);
+  const updateTask = useCallback(
+    async (task: Task, values: EditTask) => {
+      const lastTask = Object.assign({}, task);
+      Object.assign(task, values);
       setTasks(tasks => formatTasks([...tasks]));
-    }
-  }, []);
+      try {
+        await api(`/task/${task.id}`, { method: "put", data: values });
+      } catch (err) {
+        // restore original values
+        Object.assign(task, lastTask);
+        setTasks(tasks => formatTasks([...tasks]));
+      }
+    },
+    [setTasks]
+  );
+
+  const addTask = useCallback(
+    async (newTask: NewTask) => {
+      const task = await apiJSON("/tasks", newTask);
+      setTasks(tasks => formatTasks([...tasks, task], true));
+    },
+    [setTasks]
+  );
 
   const toggleCompleted = useCallback(
     (task: Task) => {
@@ -89,10 +113,19 @@ const useProvideTasks = () => {
       reload,
       isReloading,
       toggleCompleted,
+      addTask,
       updateTask,
       deleteTask
     }),
-    [deleteTask, isReloading, reload, tasks, toggleCompleted, updateTask]
+    [
+      addTask,
+      deleteTask,
+      isReloading,
+      reload,
+      tasks,
+      toggleCompleted,
+      updateTask
+    ]
   );
 };
 
