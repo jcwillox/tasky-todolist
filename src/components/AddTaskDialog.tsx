@@ -81,6 +81,7 @@ const AddTaskDialog = ({ open, onClose, handleSubmit }: AddTaskDialogProps) => {
                     label="Deadline"
                     value={props.values.dueAt}
                     onChange={value => props.setFieldValue("dueAt", value)}
+                    inputFormat="dd-MM-yyyy hh:mm"
                     renderInput={params => <TextField fullWidth {...params} />}
                   />
                 </LocalizationProvider>
