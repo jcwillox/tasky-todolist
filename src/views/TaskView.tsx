@@ -13,6 +13,10 @@ const TaskView = () => {
     SetOpen(!open);
   };
 
+  const submitForm = () => {
+    console.log("submitted");
+  };
+
   useEffect(() => {
     reload();
   }, [reload]);
@@ -39,7 +43,11 @@ const TaskView = () => {
         Add a new to-do
       </Button>
 
-      <AddTaskDialog open={open} onClose={handleOpen} />
+      <AddTaskDialog
+        open={open}
+        onClose={handleOpen}
+        handleSubmit={submitForm}
+      />
 
       {/* Display a list of To-dos */}
       <Typography variant="h3">To-Do List</Typography>
