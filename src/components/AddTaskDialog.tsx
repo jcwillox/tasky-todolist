@@ -16,6 +16,7 @@ import FormikTextField from "../components/FormikTextField";
 import { Form, Formik } from "formik";
 import { TaskSchema } from "../schemas/tasks";
 import { useTasks } from "./TaskContext";
+import { LoadingButton } from "@mui/lab";
 
 type AddTaskDialogProps = {
   open: boolean;
@@ -44,7 +45,10 @@ const AddTaskDialog = ({ open, onClose }: AddTaskDialogProps) => {
             dueAt: null
           }}
           validationSchema={TaskSchema}
-          onSubmit={values => addTask(values)}
+          onSubmit={async values => {
+            await addTask(values);
+            onClose();
+          }}
         >
           {props => (
             <Form>
@@ -90,7 +94,9 @@ const AddTaskDialog = ({ open, onClose }: AddTaskDialogProps) => {
               </Stack>
               <DialogActions>
                 <Button onClick={onClose}>Discard</Button>
-                <Button onClick={onClose}>Add</Button>
+                <Button type="submit" variant="contained" color="primary">
+                  Add
+                </Button>
               </DialogActions>
             </Form>
           )}
