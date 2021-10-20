@@ -9,14 +9,6 @@ const TaskView = () => {
   const { tasks, reload } = useTasks();
   const [open, SetOpen] = useState(false);
 
-  const handleOpen = () => {
-    SetOpen(!open);
-  };
-
-  const submitForm = () => {
-    console.log("submitted");
-  };
-
   useEffect(() => {
     reload();
   }, [reload]);
@@ -33,7 +25,7 @@ const TaskView = () => {
         variant="contained"
         color="primary"
         startIcon={<AddIcon />}
-        onClick={handleOpen}
+        onClick={() => SetOpen(!open)}
         sx={{
           alignSelf: "center",
           mb: 5,
@@ -43,11 +35,7 @@ const TaskView = () => {
         Add a new to-do
       </Button>
 
-      <AddTaskDialog
-        open={open}
-        onClose={handleOpen}
-        handleSubmit={submitForm}
-      />
+      <AddTaskDialog open={open} onClose={() => SetOpen(!open)} />
 
       {/* Display a list of To-dos */}
       <Typography variant="h3">To-Do List</Typography>

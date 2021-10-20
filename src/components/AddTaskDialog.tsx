@@ -15,14 +15,16 @@ import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import FormikTextField from "../components/FormikTextField";
 import { Form, Formik } from "formik";
 import { TaskSchema } from "../schemas/tasks";
+import { useTasks } from "./TaskContext";
 
 type AddTaskDialogProps = {
   open: boolean;
   onClose: any;
-  handleSubmit: any;
 };
 
-const AddTaskDialog = ({ open, onClose, handleSubmit }: AddTaskDialogProps) => {
+const AddTaskDialog = ({ open, onClose }: AddTaskDialogProps) => {
+  const { addTask } = useTasks();
+
   const priorityList = [
     { value: 4, label: "High" },
     { value: 3, label: "Medium" },
@@ -42,7 +44,7 @@ const AddTaskDialog = ({ open, onClose, handleSubmit }: AddTaskDialogProps) => {
             dueAt: null
           }}
           validationSchema={TaskSchema}
-          onSubmit={handleSubmit}
+          onSubmit={values => addTask(values)}
         >
           {props => (
             <Form>
