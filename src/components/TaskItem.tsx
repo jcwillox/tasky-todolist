@@ -4,6 +4,8 @@ import {
   IconButton,
   ListItem,
   ListItemText,
+  Menu,
+  MenuItem,
   Typography
 } from "@mui/material";
 import { Task } from "../models/task";
@@ -13,6 +15,11 @@ import {
   MoreVert as MoreVertIcon
 } from "@mui/icons-material";
 import { useTasks } from "./TaskContext";
+import {
+  usePopupState,
+  bindTrigger,
+  bindMenu
+} from "material-ui-popup-state/hooks";
 
 type TaskItemProps = {
   task: Task;
@@ -35,7 +42,11 @@ const CircleIcon = ({ priority }: { priority: number }) => {
 };
 
 const TaskItem = ({ task }: TaskItemProps) => {
-  const { toggleCompleted } = useTasks();
+  const { toggleCompleted, deleteTask } = useTasks();
+  const popUpState = usePopupState({ variant: "popover", popupId: "Options" });
+  const remove = () => {
+    deleteTask(task);
+  };
   return (
     <ListItem
       sx={{
@@ -48,7 +59,10 @@ const TaskItem = ({ task }: TaskItemProps) => {
       }}
       secondaryAction={
         <IconButton edge="end">
-          <MoreVertIcon />
+          <MoreVertIcon {...bindTrigger(popUpState)} />
+          <Menu {...bindMenu(popUpState)}>
+            <MenuItem onClick={remove}>Delete</MenuItem>
+          </Menu>
         </IconButton>
       }
       divider
