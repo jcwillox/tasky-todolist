@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Box,
+  CircularProgress,
   IconButton,
   ListItem,
+  ListItemIcon,
   ListItemText,
   Menu,
   MenuItem,
@@ -12,7 +14,8 @@ import { Task } from "../models/task";
 import { amber, blue, red } from "@mui/material/colors";
 import {
   CheckCircleRounded as CheckCircleRoundedIcon,
-  MoreVert as MoreVertIcon
+  MoreVert as MoreVertIcon,
+  Delete as DeleteIcon
 } from "@mui/icons-material";
 import { useTasks } from "./TaskContext";
 import {
@@ -43,27 +46,48 @@ const CircleIcon = ({ priority }: { priority: number }) => {
 
 const TaskItem = ({ task }: TaskItemProps) => {
   const { toggleCompleted, deleteTask } = useTasks();
-  const popUpState = usePopupState({ variant: "popover", popupId: "Options" });
-  const remove = () => {
-    deleteTask(task);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const popUpState = usePopupState({ variant: "popover", popupId: "options" });
+  const handleDelete = async () => {
+    setIsSubmitting(true);
+    await deleteTask(task);
+    setIsSubmitting(false);
   };
   return (
     <ListItem
       sx={{
         "& .MuiListItemSecondaryAction-root": {
-          display: "none"
+          visibility: popUpState.isOpen ? "visible" : "hidden"
         },
         "&:hover .MuiListItemSecondaryAction-root": {
-          display: "block"
+          visibility: "visible"
         }
       }}
       secondaryAction={
-        <IconButton edge="end">
-          <MoreVertIcon {...bindTrigger(popUpState)} />
-          <Menu {...bindMenu(popUpState)}>
-            <MenuItem onClick={remove}>Delete</MenuItem>
+        <React.Fragment>
+          <IconButton edge="end" {...bindTrigger(popUpState)}>
+            <MoreVertIcon />
+          </IconButton>
+          <Menu
+            {...bindMenu(popUpState)}
+            sx={{
+              "& .MuiPaper-root": {
+                minWidth: 160
+              }
+            }}
+          >
+            <MenuItem onClick={handleDelete}>
+              <ListItemIcon>
+                {isSubmitting ? (
+                  <CircularProgress size={24} />
+                ) : (
+                  <DeleteIcon fontSize="small" />
+                )}
+              </ListItemIcon>
+              Delete task
+            </MenuItem>
           </Menu>
-        </IconButton>
+        </React.Fragment>
       }
       divider
       dense
