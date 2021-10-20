@@ -27,10 +27,10 @@ const AddTaskDialog = ({ open, onClose }: AddTaskDialogProps) => {
   const { addTask } = useTasks();
 
   const priorityList = [
-    { value: 4, label: "High" },
-    { value: 3, label: "Medium" },
-    { value: 2, label: "Low" },
-    { value: 1, label: "None" }
+    { value: 1, label: "High" },
+    { value: 2, label: "Medium" },
+    { value: 3, label: "Low" },
+    { value: 4, label: "None" }
   ];
 
   return (
@@ -41,7 +41,7 @@ const AddTaskDialog = ({ open, onClose }: AddTaskDialogProps) => {
           initialValues={{
             name: "",
             description: "",
-            priority: 1,
+            priority: 4,
             dueAt: null
           }}
           validationSchema={TaskSchema}
@@ -71,6 +71,7 @@ const AddTaskDialog = ({ open, onClose }: AddTaskDialogProps) => {
                   variant="standard"
                 />
                 <FormikTextField
+                  name="priority"
                   select
                   margin="dense"
                   label="Priority"
@@ -94,9 +95,16 @@ const AddTaskDialog = ({ open, onClose }: AddTaskDialogProps) => {
               </Stack>
               <DialogActions>
                 <Button onClick={onClose}>Discard</Button>
-                <Button type="submit" variant="contained" color="primary">
-                  Add
-                </Button>
+                <LoadingButton
+                  type="submit"
+                  variant="contained"
+                  loading={props.isSubmitting}
+                  sx={{
+                    textTransform: "none"
+                  }}
+                >
+                  {(props.isSubmitting && "") || "Add"}
+                </LoadingButton>
               </DialogActions>
             </Form>
           )}
