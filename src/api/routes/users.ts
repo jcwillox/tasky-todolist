@@ -17,10 +17,20 @@ import { Op } from "sequelize";
 const cookieToken = async (
   user: UserModel
 ): Promise<[string, string, CookieOptions]> => {
+  // tokens are expired after 1 month of inactivity, they are refreshed
+  // whenever the user accesses the website
+  const expiresIn = 30 * 86400;
   return [
     COOKIE_TOKEN_NAME,
-    await jwt.sign({ id: user.id, group: user.group }, SECRET_KEY),
-    { sameSite: "lax", httpOnly: true, secure: !DEVELOPMENT }
+    await jwt.sign({ id: user.id, group: user.group }, SECRET_KEY, {
+      expiresIn
+    }),
+    {
+      sameSite: "lax",
+      maxAge: expiresIn,
+      httpOnly: true,
+      secure: !DEVELOPMENT
+    }
   ];
 };
 

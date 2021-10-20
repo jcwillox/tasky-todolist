@@ -6,6 +6,7 @@ export type UserAuth = {
   id?: string;
   group?: string;
   iat?: number;
+  exp?: number;
 };
 
 export function jwtAuth(group?: string) {
