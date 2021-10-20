@@ -7,7 +7,7 @@ import AddTaskDialog from "../components/AddTaskDialog";
 
 const TaskView = () => {
   const { tasks, reload } = useTasks();
-  const [open, SetOpen] = useState(false);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     reload();
@@ -25,7 +25,7 @@ const TaskView = () => {
         variant="contained"
         color="primary"
         startIcon={<AddIcon />}
-        onClick={() => SetOpen(!open)}
+        onClick={() => setOpen(!open)}
         sx={{
           alignSelf: "center",
           mb: 5,
@@ -35,7 +35,7 @@ const TaskView = () => {
         Add a new to-do
       </Button>
 
-      <AddTaskDialog open={open} onClose={() => SetOpen(!open)} />
+      <AddTaskDialog open={open} onClose={() => setOpen(!open)} />
 
       {/* Display a list of To-dos */}
       <Typography variant="h3">To-Do List</Typography>

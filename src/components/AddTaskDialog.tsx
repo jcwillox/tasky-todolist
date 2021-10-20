@@ -20,7 +20,7 @@ import { LoadingButton } from "@mui/lab";
 
 type AddTaskDialogProps = {
   open: boolean;
-  onClose: any;
+  onClose: () => void;
 };
 
 const AddTaskDialog = ({ open, onClose }: AddTaskDialogProps) => {
@@ -34,7 +34,7 @@ const AddTaskDialog = ({ open, onClose }: AddTaskDialogProps) => {
   ];
 
   return (
-    <Dialog open={open} onClose={onClose} fullWidth={true}>
+    <Dialog open={open} onClose={onClose} fullWidth>
       <DialogTitle>Add a new to-do</DialogTitle>
       <DialogContent>
         <Formik
@@ -50,7 +50,7 @@ const AddTaskDialog = ({ open, onClose }: AddTaskDialogProps) => {
             onClose();
           }}
         >
-          {props => (
+          {({ isSubmitting, setFieldValue, values }) => (
             <Form>
               <Stack spacing={2}>
                 <FormikTextField
@@ -86,8 +86,8 @@ const AddTaskDialog = ({ open, onClose }: AddTaskDialogProps) => {
                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                   <DateTimePicker
                     label="Deadline"
-                    value={props.values.dueAt}
-                    onChange={value => props.setFieldValue("dueAt", value)}
+                    value={values.dueAt}
+                    onChange={value => setFieldValue("dueAt", value)}
                     inputFormat="dd-MM-yyyy hh:mm"
                     renderInput={params => <TextField fullWidth {...params} />}
                   />
@@ -98,12 +98,12 @@ const AddTaskDialog = ({ open, onClose }: AddTaskDialogProps) => {
                 <LoadingButton
                   type="submit"
                   variant="contained"
-                  loading={props.isSubmitting}
+                  loading={isSubmitting}
                   sx={{
                     textTransform: "none"
                   }}
                 >
-                  {(props.isSubmitting && "") || "Add"}
+                  {(isSubmitting && "") || "Add"}
                 </LoadingButton>
               </DialogActions>
             </Form>
