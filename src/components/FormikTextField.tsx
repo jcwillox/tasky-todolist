@@ -4,11 +4,13 @@ import { capitalize, TextField } from "@mui/material";
 import { TextFieldProps } from "@mui/material/TextField/TextField";
 
 const FormikTextField = (props: TextFieldProps) => {
-  const { handleChange, handleBlur, touched, errors } = useFormikContext();
+  const { handleChange, handleBlur, touched, errors, values } =
+    useFormikContext();
   return (
     <TextField
       id={props.name}
       variant="outlined"
+      value={(values as {})[props.name!]}
       onChange={handleChange}
       onBlur={handleBlur}
       error={touched[props.name!] && Boolean(errors[props.name!])}
