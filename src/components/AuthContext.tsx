@@ -5,7 +5,7 @@ import React, {
   useContext,
   useEffect
 } from "react";
-import { NewUser, User } from "../models/user";
+import { ChangePassword, EditUser, NewUser, User } from "../models/user";
 import { LoginBody } from "../models/login";
 import { api, ApiError, apiJSON } from "../utils/fetch";
 import { useLocalStorageState } from "use-local-storage-state";
@@ -49,6 +49,18 @@ const useProvideAuth = () => {
     }
   }, [logout, setUser]);
 
+  const changePassword = useCallback((passwords: ChangePassword) => {
+    return api("/user/password", { data: passwords });
+  }, []);
+
+  const editUser = useCallback(
+    async (details: EditUser) => {
+      await api("/user", { method: "put", data: details });
+      setUser(user => ({ ...Object.assign(user, details) }));
+    },
+    [setUser]
+  );
+
   // kick-off background check that the user is still authenticated
   useEffect(() => {
     validate();
@@ -59,7 +71,9 @@ const useProvideAuth = () => {
     login,
     logout,
     register,
-    validate
+    validate,
+    changePassword,
+    editUser
   };
 };
 

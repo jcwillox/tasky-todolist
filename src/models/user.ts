@@ -11,3 +11,10 @@ export interface User extends BaseUser {
 export interface NewUser extends BaseUser {
   password: string;
 }
+
+export interface EditUser extends Partial<BaseUser> {}
+
+export interface ChangePassword {
+  password: string;
+  newPassword: string;
+}
