@@ -1,6 +1,5 @@
 import React, {
   createContext,
-  Dispatch,
   FunctionComponent,
   SetStateAction,
   useCallback,
@@ -13,39 +12,47 @@ import { api, apiJSON } from "../utils/fetch";
 import { EditTask, NewTask, Task } from "../models/task";
 import { useLocalStorageState } from "use-local-storage-state";
 
-/** Deserialize date fields from strings to Date objects */
-const parseDates = (json: any[]) => {
-  for (const o of json)
+type FormatOptions = {
+  sort: false;
+};
+
+type SetTasksFn = (
+  newTasks?: SetStateAction<Task[]>,
+  options?: FormatOptions
+) => void;
+
+const formatTasks = (tasks: Task[], options?: FormatOptions) => {
+  // deserialize date fields from strings to Date objects
+  for (const o of tasks)
     for (const field of ["dueAt", "createdAt", "updatedAt"])
       if (typeof o[field] === "string") {
         o[field] = new Date(o[field]);
       }
-  return json;
-};
-
-const formatTasks = (tasks: Task[], dates?: boolean) => {
-  if (dates) parseDates(tasks);
-  tasks.sort((t1, t2) => {
-    // sort by completed
-    if (t1.completed > t2.completed) return 1;
-    if (t1.completed < t2.completed) return -1;
-    // sort by name
-    if (t1.name > t2.name) return 1;
-    if (t1.name < t2.name) return -1;
-    return 0;
-  });
+  // sort tasks
+  if (options?.sort !== false)
+    tasks.sort((t1, t2) => {
+      // sort by completed
+      if (t1.completed > t2.completed) return 1;
+      if (t1.completed < t2.completed) return -1;
+      // sort by name
+      if (t1.name > t2.name) return 1;
+      if (t1.name < t2.name) return -1;
+      return 0;
+    });
   return tasks;
 };
 
-const useLocalTaskLink = (): [Task[], Dispatch<SetStateAction<Task[]>>] => {
+const useLocalTaskLink = (): [Task[], SetTasksFn] => {
   const [localTasks, setLocalTasks] = useLocalStorageState<Task[]>("tasks", []);
-  const [tasks, setTasks] = useState<Task[]>(parseDates(localTasks));
+  const [tasks, setTasksDirect] = useState<Task[]>(
+    formatTasks(localTasks, { sort: false })
+  );
 
   // the following use effect hooks facilitate syncing tasks with local storage
   // while also deserializing the task dates when retrieved from local storage
   useEffect(() => {
     if (localTasks !== tasks) {
-      setTasks(parseDates(localTasks));
+      setTasks(localTasks, { sort: false });
     }
   }, [localTasks]); // eslint-disable-line
 
@@ -54,6 +61,14 @@ const useLocalTaskLink = (): [Task[], Dispatch<SetStateAction<Task[]>>] => {
       setLocalTasks(tasks);
     }
   }, [tasks]); // eslint-disable-line
+
+  const setTasks: SetTasksFn = useCallback((newTasks, options) => {
+    setTasksDirect(tasks => {
+      if (typeof newTasks === "function") newTasks = newTasks(tasks);
+      if (!newTasks) newTasks = [...tasks];
+      return formatTasks(newTasks, options);
+    });
+  }, []);
 
   return [tasks, setTasks];
 };
@@ -64,14 +79,14 @@ const useProvideTasks = () => {
 
   const reload = useCallback(async () => {
     setIsReloading(true);
-    setTasks(formatTasks(await apiJSON("/tasks"), true));
+    setTasks(await apiJSON("/tasks"));
     setIsReloading(false);
   }, [setTasks]);
 
   const deleteTask = useCallback(
     async (task: Task) => {
       await api(`/task/${task.id}`, { method: "delete" });
-      setTasks(tasks => tasks.filter(t => t.id !== task.id));
+      setTasks(tasks => tasks.filter(t => t.id !== task.id), { sort: false });
     },
     [setTasks]
   );
@@ -80,13 +95,13 @@ const useProvideTasks = () => {
     async (task: Task, values: EditTask) => {
       const lastTask = Object.assign({}, task);
       Object.assign(task, values);
-      setTasks(tasks => formatTasks([...tasks]));
+      setTasks();
       try {
         await api(`/task/${task.id}`, { method: "put", data: values });
       } catch (err) {
         // restore original values
         Object.assign(task, lastTask);
-        setTasks(tasks => formatTasks([...tasks]));
+        setTasks();
       }
     },
     [setTasks]
@@ -95,7 +110,7 @@ const useProvideTasks = () => {
   const addTask = useCallback(
     async (newTask: NewTask) => {
       const task = await apiJSON("/tasks", newTask);
-      setTasks(tasks => formatTasks([...tasks, task], true));
+      setTasks(tasks => [...tasks, task]);
     },
     [setTasks]
   );
