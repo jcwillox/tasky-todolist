@@ -27,7 +27,7 @@ const cookieToken = async (
     }),
     {
       sameSite: "lax",
-      maxAge: expiresIn,
+      maxAge: expiresIn * 1000,
       httpOnly: true,
       secure: !DEVELOPMENT
     }
