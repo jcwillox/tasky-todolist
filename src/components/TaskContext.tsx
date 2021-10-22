@@ -92,12 +92,13 @@ const useProvideTasks = () => {
   );
 
   const updateTask = useCallback(
-    async (task: Task, values: EditTask) => {
+    async (task: Task, values: EditTask, delayUpdate?: boolean) => {
       const lastTask = Object.assign({}, task);
       Object.assign(task, values);
-      setTasks();
+      if (!delayUpdate) setTasks();
       try {
         await api(`/task/${task.id}`, { method: "put", data: values });
+        if (delayUpdate) setTasks();
       } catch (err) {
         // restore original values
         Object.assign(task, lastTask);
