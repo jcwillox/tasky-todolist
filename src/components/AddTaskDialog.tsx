@@ -61,6 +61,7 @@ const AddTaskDialog = ({ open, onClose }: AddTaskDialogProps) => {
                   placeholder="Dinner with family"
                   fullWidth
                   variant="standard"
+                  onBlur={undefined}
                 />
                 <FormikTextField
                   name="description"
