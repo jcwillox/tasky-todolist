@@ -95,14 +95,11 @@ const RegisterView = () => {
                     mt: 2
                   }}
                 >
-                  <Button href="/login" sx={{ textTransform: "none" }}>
-                    Sign in instead
-                  </Button>
+                  <Button href="/login">Sign in instead</Button>
                   <LoadingButton
                     type="submit"
                     variant="contained"
                     loading={isSubmitting}
-                    sx={{ textTransform: "none" }}
                   >
                     {(isSubmitting && "") || "Create account"}
                   </LoadingButton>

@@ -100,9 +100,6 @@ const AddTaskDialog = ({ open, onClose }: AddTaskDialogProps) => {
                   type="submit"
                   variant="contained"
                   loading={isSubmitting}
-                  sx={{
-                    textTransform: "none"
-                  }}
                 >
                   {(isSubmitting && "") || "Add"}
                 </LoadingButton>

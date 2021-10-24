@@ -28,8 +28,7 @@ const TaskView = () => {
         onClick={() => setOpen(!open)}
         sx={{
           alignSelf: "center",
-          mb: 5,
-          textTransform: "none"
+          mb: 5
         }}
       >
         Add a new to-do

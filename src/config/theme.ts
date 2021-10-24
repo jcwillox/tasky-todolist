@@ -22,6 +22,11 @@ export const getTheme = (mode: PaletteMode) =>
             }
           })
     },
+    typography: {
+      button: {
+        textTransform: "none"
+      }
+    },
     components: {
       MuiLink: {
         defaultProps: {

@@ -74,22 +74,11 @@ const LoginView = () => {
                     mt: 2
                   }}
                 >
-                  <Button
-                    href="/register"
-                    sx={{
-                      textTransform: "none"
-                    }}
-                  >
-                    Create Account
-                  </Button>
-
+                  <Button href="/register">Create Account</Button>
                   <LoadingButton
                     type="submit"
                     variant="contained"
                     loading={isSubmitting}
-                    sx={{
-                      textTransform: "none"
-                    }}
                   >
                     {(isSubmitting && "") || "Sign In"}
                   </LoadingButton>
