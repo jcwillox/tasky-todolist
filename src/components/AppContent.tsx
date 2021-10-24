@@ -5,6 +5,7 @@ import { useAuth } from "./AuthContext";
 import LoginView from "../views/LoginView";
 import RegisterView from "../views/RegisterView";
 import BoundaryRoute from "./BoundaryRoute";
+import LandingView from "../views/LandingView";
 
 const AdminView = lazy(() => import("../views/AdminView"));
 
@@ -24,10 +25,11 @@ const AppContent = () => {
 
   return (
     <Switch>
+      <BoundaryRoute exact path="/" component={LandingView} />
       <BoundaryRoute exact path="/login" component={LoginView} />
       <BoundaryRoute exact path="/register" component={RegisterView} />
       <Route path="*">
-        <Redirect to="/login" />
+        <Redirect to="/" />
       </Route>
     </Switch>
   );
