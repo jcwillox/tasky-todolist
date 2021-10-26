@@ -24,6 +24,7 @@ import {
   bindTrigger,
   bindMenu
 } from "material-ui-popup-state/hooks";
+import AddTaskDialog from "./AddTaskDialog";
 
 type TaskItemProps = {
   task: Task;
@@ -46,14 +47,17 @@ const CircleIcon = ({ priority }: { priority: number }) => {
 };
 
 const TaskItem = ({ task }: TaskItemProps) => {
-  const { toggleCompleted, deleteTask } = useTasks();
+  const { toggleCompleted, deleteTask, tasks } = useTasks();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [open, setOpen] = useState(false);
   const popUpState = usePopupState({ variant: "popover", popupId: "options" });
+
   const handleDelete = async () => {
     setIsSubmitting(true);
     await deleteTask(task);
     setIsSubmitting(false);
   };
+
   return (
     <ListItem
       sx={{
@@ -87,7 +91,7 @@ const TaskItem = ({ task }: TaskItemProps) => {
               </ListItemIcon>
               Delete task
             </MenuItem>
-            <MenuItem>
+            <MenuItem onClick={() => setOpen(true)}>
               <ListItemIcon>
                 <EditIcon fontSize="small" />
               </ListItemIcon>
@@ -123,6 +127,7 @@ const TaskItem = ({ task }: TaskItemProps) => {
           task.dueAt ? `(${task.dueAt.toLocaleString()})` : ""
         }`}
       />
+      <AddTaskDialog task={task} open={open} onClose={() => setOpen(!open)} />
     </ListItem>
   );
 };
