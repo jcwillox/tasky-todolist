@@ -47,7 +47,7 @@ const CircleIcon = ({ priority }: { priority: number }) => {
 };
 
 const TaskItem = ({ task }: TaskItemProps) => {
-  const { toggleCompleted, deleteTask, tasks } = useTasks();
+  const { toggleCompleted, deleteTask } = useTasks();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [open, setOpen] = useState(false);
   const popUpState = usePopupState({ variant: "popover", popupId: "options" });
@@ -91,7 +91,12 @@ const TaskItem = ({ task }: TaskItemProps) => {
               </ListItemIcon>
               Delete task
             </MenuItem>
-            <MenuItem onClick={() => setOpen(true)}>
+            <MenuItem
+              onClick={() => {
+                setOpen(!open);
+                popUpState.close();
+              }}
+            >
               <ListItemIcon>
                 <EditIcon fontSize="small" />
               </ListItemIcon>
