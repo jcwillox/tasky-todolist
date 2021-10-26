@@ -15,7 +15,8 @@ import { amber, blue, red } from "@mui/material/colors";
 import {
   CheckCircleRounded as CheckCircleRoundedIcon,
   MoreVert as MoreVertIcon,
-  Delete as DeleteIcon
+  Delete as DeleteIcon,
+  Edit as EditIcon
 } from "@mui/icons-material";
 import { useTasks } from "./TaskContext";
 import {
@@ -85,6 +86,12 @@ const TaskItem = ({ task }: TaskItemProps) => {
                 )}
               </ListItemIcon>
               Delete task
+            </MenuItem>
+            <MenuItem>
+              <ListItemIcon>
+                <EditIcon fontSize="small" />
+              </ListItemIcon>
+              Edit task
             </MenuItem>
           </Menu>
         </React.Fragment>
