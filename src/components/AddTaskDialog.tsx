@@ -17,13 +17,15 @@ import { Form, Formik } from "formik";
 import { TaskSchema } from "../schemas/tasks";
 import { useTasks } from "./TaskContext";
 import { LoadingButton } from "@mui/lab";
+import { Task } from "../models/task";
 
 type AddTaskDialogProps = {
+  task?: Task;
   open: boolean;
   onClose: () => void;
 };
 
-const AddTaskDialog = ({ open, onClose }: AddTaskDialogProps) => {
+const AddTaskDialog = ({ task, open, onClose }: AddTaskDialogProps) => {
   const { addTask } = useTasks();
 
   const priorityList = [
