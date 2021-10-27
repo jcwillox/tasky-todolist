@@ -93,7 +93,7 @@ const TaskItem = ({ task }: TaskItemProps) => {
             </MenuItem>
             <MenuItem
               onClick={() => {
-                setOpen(!open);
+                setOpen(true);
                 popUpState.close();
               }}
             >
@@ -132,7 +132,7 @@ const TaskItem = ({ task }: TaskItemProps) => {
           task.dueAt ? `(${task.dueAt.toLocaleString()})` : ""
         }`}
       />
-      <AddTaskDialog task={task} open={open} onClose={() => setOpen(!open)} />
+      <AddTaskDialog task={task} open={open} onClose={() => setOpen(false)} />
     </ListItem>
   );
 };
