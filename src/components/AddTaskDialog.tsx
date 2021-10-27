@@ -53,7 +53,7 @@ const AddTaskDialog = ({ task, open, onClose }: AddTaskDialogProps) => {
             if (!task) {
               await addTask(values);
             } else {
-              await updateTask(task, values);
+              await updateTask(task, values, true);
             }
             onClose();
           }}
