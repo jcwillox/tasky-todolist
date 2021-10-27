@@ -3,14 +3,13 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogTitle,
-  Stack
+  DialogTitle
 } from "@mui/material";
 import { Form, Formik } from "formik";
 import { useAuth } from "./AuthContext";
 import FormikPasswordField from "./FormikPasswordField";
 import { LoadingButton } from "@mui/lab";
-import { ChangePasswordConfirmSchema } from "../schemas/register";
+import { ChangePasswordConfirmSchema } from "../schemas";
 
 type ChangePasswordProps = {
   open: boolean;
@@ -37,37 +36,32 @@ const ChangePasswordDialog = ({ open, onClose }: ChangePasswordProps) => {
         >
           {({ isSubmitting }) => (
             <Form>
-              <Stack spacing={2}>
-                <FormikPasswordField
-                  autoFocus
-                  name="password"
-                  label="Current Password"
-                  margin="dense"
-                  placeholder="Current Password"
-                  fullWidth
-                  variant="standard"
-                  autoComplete="current-password"
-                />
-                <FormikPasswordField
-                  name="newPassword"
-                  label="New Password"
-                  margin="dense"
-                  placeholder="New Password"
-                  fullWidth
-                  variant="standard"
-                  autoComplete="new-password"
-                />
-                <FormikPasswordField
-                  name="confirmPassword"
-                  label="Confirm Password"
-                  margin="dense"
-                  placeholder="Confirm Password"
-                  fullWidth
-                  variant="standard"
-                  autoComplete="new-password"
-                />
-              </Stack>
-
+              <FormikPasswordField
+                autoFocus
+                name="password"
+                label="Current Password"
+                margin="dense"
+                placeholder="Current Password"
+                autoComplete="current-password"
+                onBlur={undefined}
+                fullWidth
+              />
+              <FormikPasswordField
+                name="newPassword"
+                label="New Password"
+                margin="dense"
+                placeholder="New Password"
+                autoComplete="new-password"
+                fullWidth
+              />
+              <FormikPasswordField
+                name="confirmPassword"
+                label="Confirm Password"
+                margin="dense"
+                placeholder="Confirm Password"
+                autoComplete="new-password"
+                fullWidth
+              />
               <DialogActions>
                 <Button onClick={onClose}>Cancel</Button>
                 <LoadingButton

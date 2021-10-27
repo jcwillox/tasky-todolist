@@ -3,12 +3,11 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogTitle,
-  Stack
+  DialogTitle
 } from "@mui/material";
 import { Form, Formik } from "formik";
 import { useAuth } from "./AuthContext";
-import { EditUserSchema } from "../schemas/register";
+import { EditUserSchema } from "../schemas";
 import FormikTextField from "./FormikTextField";
 import { LoadingButton } from "@mui/lab";
 
@@ -37,27 +36,23 @@ const EditUserDialog = ({ open, onClose }: EditUserProps) => {
         >
           {({ isSubmitting }) => (
             <Form>
-              <Stack spacing={2}>
-                <FormikTextField
-                  autoFocus
-                  name="name"
-                  label="New Name"
-                  margin="dense"
-                  placeholder="John Smith"
-                  variant="standard"
-                />
-                <FormikTextField
-                  autoFocus
-                  name="username"
-                  label="New Username"
-                  margin="dense"
-                  placeholder="John Smith"
-                  variant="standard"
-                />
-              </Stack>
-
+              <FormikTextField
+                autoFocus
+                name="name"
+                label="Name"
+                margin="dense"
+                placeholder="John Smith"
+                fullWidth
+              />
+              <FormikTextField
+                name="username"
+                label="Username"
+                margin="dense"
+                placeholder="john.smith"
+                fullWidth
+              />
               <DialogActions>
-                <Button onClick={onClose}>Discard</Button>
+                <Button onClick={onClose}>Cancel</Button>
                 <LoadingButton
                   type="submit"
                   variant="contained"
