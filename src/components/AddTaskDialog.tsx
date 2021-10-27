@@ -17,14 +17,16 @@ import { Form, Formik } from "formik";
 import { TaskSchema } from "../schemas/tasks";
 import { useTasks } from "./TaskContext";
 import { LoadingButton } from "@mui/lab";
+import { Task } from "../models/task";
 
 type AddTaskDialogProps = {
+  task?: Task;
   open: boolean;
   onClose: () => void;
 };
 
-const AddTaskDialog = ({ open, onClose }: AddTaskDialogProps) => {
-  const { addTask } = useTasks();
+const AddTaskDialog = ({ task, open, onClose }: AddTaskDialogProps) => {
+  const { addTask, updateTask } = useTasks();
 
   const priorityList = [
     { value: 1, label: "High" },
@@ -33,20 +35,26 @@ const AddTaskDialog = ({ open, onClose }: AddTaskDialogProps) => {
     { value: 4, label: "None" }
   ];
 
+  const initialValues = {
+    name: "",
+    description: "",
+    priority: 4,
+    dueAt: null
+  };
+
   return (
     <Dialog open={open} onClose={onClose} fullWidth>
-      <DialogTitle>Add a new to-do</DialogTitle>
+      <DialogTitle>{task ? "Edit task" : "Add a new to-do"}</DialogTitle>
       <DialogContent>
         <Formik
-          initialValues={{
-            name: "",
-            description: "",
-            priority: 4,
-            dueAt: null
-          }}
+          initialValues={task ? task : initialValues}
           validationSchema={TaskSchema}
           onSubmit={async values => {
-            await addTask(values);
+            if (!task) {
+              await addTask(values);
+            } else {
+              await updateTask(task, values, true);
+            }
             onClose();
           }}
         >
@@ -101,7 +109,9 @@ const AddTaskDialog = ({ open, onClose }: AddTaskDialogProps) => {
                   variant="contained"
                   loading={isSubmitting}
                 >
-                  {(isSubmitting && "") || "Add"}
+                  {task
+                    ? (isSubmitting && "") || "Edit"
+                    : (isSubmitting && "") || "Add"}
                 </LoadingButton>
               </DialogActions>
             </Form>

@@ -15,7 +15,8 @@ import { amber, blue, red } from "@mui/material/colors";
 import {
   CheckCircleRounded as CheckCircleRoundedIcon,
   MoreVert as MoreVertIcon,
-  Delete as DeleteIcon
+  Delete as DeleteIcon,
+  Edit as EditIcon
 } from "@mui/icons-material";
 import { useTasks } from "./TaskContext";
 import {
@@ -23,6 +24,7 @@ import {
   bindTrigger,
   bindMenu
 } from "material-ui-popup-state/hooks";
+import AddTaskDialog from "./AddTaskDialog";
 
 type TaskItemProps = {
   task: Task;
@@ -47,12 +49,15 @@ const CircleIcon = ({ priority }: { priority: number }) => {
 const TaskItem = ({ task }: TaskItemProps) => {
   const { toggleCompleted, deleteTask } = useTasks();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [open, setOpen] = useState(false);
   const popUpState = usePopupState({ variant: "popover", popupId: "options" });
+
   const handleDelete = async () => {
     setIsSubmitting(true);
     await deleteTask(task);
     setIsSubmitting(false);
   };
+
   return (
     <ListItem
       sx={{
@@ -86,6 +91,17 @@ const TaskItem = ({ task }: TaskItemProps) => {
               </ListItemIcon>
               Delete task
             </MenuItem>
+            <MenuItem
+              onClick={() => {
+                setOpen(true);
+                popUpState.close();
+              }}
+            >
+              <ListItemIcon>
+                <EditIcon fontSize="small" />
+              </ListItemIcon>
+              Edit task
+            </MenuItem>
           </Menu>
         </React.Fragment>
       }
@@ -116,6 +132,7 @@ const TaskItem = ({ task }: TaskItemProps) => {
           task.dueAt ? `(${task.dueAt.toLocaleString()})` : ""
         }`}
       />
+      <AddTaskDialog task={task} open={open} onClose={() => setOpen(false)} />
     </ListItem>
   );
 };
