@@ -1,76 +1,71 @@
 import React, { useState } from "react";
-import { Box, Button, Link, Typography } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import Jdenticon from "../components/Jdenticon";
 import { useAuth } from "../components/AuthContext";
 import EditIcon from "@mui/icons-material/Edit";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import EditUserDialog from "../components/EditUserDialog";
+import ChangePasswordDialog from "../components/ChangePasswordDialog";
 
 const AccountView = () => {
   const { user } = useAuth();
 
-  const [open, setOpen] = useState(false);
+  const [openEditUser, setEditUserOpen] = useState(false);
+  const [openChangePassword, setChangePasswordOpen] = useState(false);
   return (
     <Box
       sx={{
         display: "flex",
-        flexDirection: "row",
-        justifyContent: "space-around"
+        flexDirection: "column",
+        alignItems: "center",
+        border: theme => `2px solid ${theme.palette.primary.main}`,
+        borderRadius: 3
       }}
     >
-      <Button
-        component={Link}
-        href="/tasks"
-        variant="contained"
-        fullWidth
-        startIcon={<ArrowBackIcon />}
+      <Jdenticon value={user!.name || user!.username} size={300} />
+      <Typography
+        variant="h2"
+        color="primary"
         sx={{
-          height: 50,
-          width: 200,
-          minWidth: 180
+          alignSelf: "center"
         }}
       >
-        Return to Tasks
-      </Button>
+        {user!.name}
+      </Typography>
+      <Typography variant="subtitle1" color="primary">
+        {user!.username}
+      </Typography>
 
       <Box
         sx={{
           display: "flex",
-          flexDirection: "column"
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          flex: 1
         }}
       >
-        <Jdenticon value={user!.name || user!.username} size={300} />
-        <Typography
-          variant="h2"
-          color="primary"
-          sx={{
-            alignSelf: "center"
-          }}
+        <Button
+          fullWidth
+          endIcon={<EditIcon />}
+          onClick={() => setEditUserOpen(!openEditUser)}
         >
-          {user!.name || user!.username}
-        </Typography>
-
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-            flex: 1
-          }}
+          Edit Username
+        </Button>
+        <EditUserDialog
+          open={openEditUser}
+          onClose={() => setEditUserOpen(!openEditUser)}
+        />
+        <Button
+          fullWidth
+          endIcon={<EditIcon />}
+          onClick={() => setChangePasswordOpen(!openChangePassword)}
         >
-          <Button
-            fullWidth
-            endIcon={<EditIcon />}
-            onClick={() => setOpen(!open)}
-          >
-            Edit Username
-          </Button>
-          <EditUserDialog open={open} onClose={() => setOpen(!open)} />
-          <Button fullWidth endIcon={<EditIcon />}>
-            Change Password
-          </Button>
-        </Box>
+          Change Password
+        </Button>
+        <ChangePasswordDialog
+          open={openChangePassword}
+          onClose={() => setChangePasswordOpen(!openChangePassword)}
+        />
       </Box>
     </Box>
   );

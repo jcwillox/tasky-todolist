@@ -4,8 +4,6 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  MenuItem,
-  TextField,
   Stack
 } from "@mui/material";
 import { Form, Formik } from "formik";
@@ -21,15 +19,15 @@ type EditUserProps = {
 
 const EditUserDialog = ({ open, onClose }: EditUserProps) => {
   const { editUser, user } = useAuth();
-  console.log(user?.name);
+
   return (
     <Dialog open={open} onClose={onClose} fullWidth>
       <DialogTitle>Edit User</DialogTitle>
       <DialogContent>
         <Formik
           initialValues={{
-            name: "",
-            username: ""
+            name: user!.name,
+            username: user!.username
           }}
           validationSchema={EditUserSchema}
           onSubmit={async values => {
@@ -42,6 +40,7 @@ const EditUserDialog = ({ open, onClose }: EditUserProps) => {
               <Stack spacing={2}>
                 <FormikTextField
                   autoFocus
+                  name="name"
                   label="New Name"
                   margin="dense"
                   placeholder="John Smith"
@@ -49,6 +48,7 @@ const EditUserDialog = ({ open, onClose }: EditUserProps) => {
                 />
                 <FormikTextField
                   autoFocus
+                  name="username"
                   label="New Username"
                   margin="dense"
                   placeholder="John Smith"
