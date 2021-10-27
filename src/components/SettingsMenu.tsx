@@ -50,6 +50,9 @@ const SettingsMenu = () => {
       >
         {user && (
           <MenuItem
+            onClick={popupState.close}
+            component={Link}
+            href="/account"
             sx={{
               textTransform: "capitalize"
             }}

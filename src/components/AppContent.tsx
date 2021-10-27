@@ -6,6 +6,7 @@ import LoginView from "../views/LoginView";
 import RegisterView from "../views/RegisterView";
 import BoundaryRoute from "./BoundaryRoute";
 import LandingView from "../views/LandingView";
+import AccountView from "../views/AccountView";
 
 const AdminView = lazy(() => import("../views/AdminView"));
 
@@ -17,6 +18,7 @@ const AppContent = () => {
       <Switch>
         <BoundaryRoute exact path="/" component={TaskView} />
         <BoundaryRoute exact path="/admin" component={AdminView} />
+        <BoundaryRoute exact path="/account" component={AccountView} />
         <Route path="*">
           <Redirect to="/" />
         </Route>
