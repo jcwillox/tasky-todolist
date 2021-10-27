@@ -22,13 +22,7 @@ const AccountView = () => {
       }}
     >
       <Jdenticon value={user!.name || user!.username} size={300} />
-      <Typography
-        variant="h2"
-        color="primary"
-        sx={{
-          alignSelf: "center"
-        }}
-      >
+      <Typography variant="h2" color="primary">
         {user!.name}
       </Typography>
       <Typography variant="subtitle1" color="primary">
