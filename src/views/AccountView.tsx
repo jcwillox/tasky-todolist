@@ -4,7 +4,7 @@ import Jdenticon from "../components/Jdenticon";
 import { useAuth } from "../components/AuthContext";
 import EditIcon from "@mui/icons-material/Edit";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import EditUserDialog from "../components/EditUserDialogs";
+import EditUserDialog from "../components/EditUserDialog";
 
 const AccountView = () => {
   const { user } = useAuth();

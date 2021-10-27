@@ -20,7 +20,8 @@ type EditUserProps = {
 };
 
 const EditUserDialog = ({ open, onClose }: EditUserProps) => {
-  const { editUser } = useAuth();
+  const { editUser, user } = useAuth();
+  console.log(user?.name);
   return (
     <Dialog open={open} onClose={onClose} fullWidth>
       <DialogTitle>Edit User</DialogTitle>
