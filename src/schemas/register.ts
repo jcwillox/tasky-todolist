@@ -27,3 +27,9 @@ export const ChangePasswordSchema: SchemaOf<ChangePassword> = object({
   password: string().required().min(8).max(60),
   newPassword: string().required().min(8).max(60)
 });
+
+export const ChangePasswordConfirmSchema = ChangePasswordSchema.shape({
+  confirmPassword: string()
+    .oneOf([ref("newPassword"), null], "passwords must match")
+    .required("password does not match")
+});
