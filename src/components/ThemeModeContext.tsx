@@ -12,7 +12,7 @@ import { useLocalStorageState } from "use-local-storage-state";
 const useThemeModeProvider = () => {
   const [themeMode, setMode] = useLocalStorageState<PaletteMode | "system">(
     "theme",
-    "light"
+    "system"
   );
 
   const switchThemeMode = useCallback(() => {
