@@ -3,19 +3,20 @@ import { LoginBody } from "../models/login";
 import { object, ref, SchemaOf, string } from "yup";
 
 const PasswordValidation = string().required().min(8).max(60);
+const UsernameValidation = string().required().min(3).max(32);
 
 export const PasswordSchema = object({
   password: PasswordValidation
 });
 
 export const LoginBodySchema: SchemaOf<LoginBody> = object({
-  username: string().required().max(32),
+  username: UsernameValidation,
   password: PasswordValidation
 });
 
 export const RegisterSchema: SchemaOf<NewUser> = object({
   name: string().optional().max(128),
-  username: string().required().max(32),
+  username: UsernameValidation,
   password: PasswordValidation
 });
 
@@ -27,7 +28,7 @@ export const RegisterConfirmSchema = RegisterSchema.shape({
 
 export const EditUserSchema: SchemaOf<EditUser> = object({
   name: string().nullable().max(128),
-  username: string().optional().max(32)
+  username: UsernameValidation
 });
 
 export const EditUserAdminSchema = EditUserSchema.shape({
