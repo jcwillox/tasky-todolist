@@ -73,17 +73,15 @@ const AddTaskDialog = ({ task, open, onClose }: AddTaskDialogProps) => {
                 />
                 <FormikTextField
                   name="description"
-                  label="Description"
                   margin="dense"
                   placeholder="At Sydney Opera House"
-                  fullWidth
                   variant="standard"
+                  fullWidth
                 />
                 <FormikTextField
                   name="priority"
                   select
                   margin="dense"
-                  label="Priority"
                   fullWidth
                 >
                   {priorityList.map(item => (

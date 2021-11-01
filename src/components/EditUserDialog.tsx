@@ -39,14 +39,12 @@ const EditUserDialog = ({ open, onClose }: EditUserProps) => {
               <FormikTextField
                 autoFocus
                 name="name"
-                label="Name"
                 margin="dense"
                 placeholder="John Smith"
                 fullWidth
               />
               <FormikTextField
                 name="username"
-                label="Username"
                 margin="dense"
                 placeholder="john.smith"
                 fullWidth

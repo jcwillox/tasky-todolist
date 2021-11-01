@@ -50,21 +50,18 @@ const RegisterView = () => {
             <Form>
               <FormikTextField
                 name="name"
-                label="Name"
                 placeholder="John Smith"
                 margin="dense"
                 fullWidth
               />
               <FormikTextField
                 name="username"
-                label="Username"
                 placeholder="john.smith"
                 margin="dense"
                 fullWidth
               />
               <FormikPasswordField
                 name="password"
-                label="Password"
                 placeholder="Password"
                 margin="dense"
                 fullWidth
