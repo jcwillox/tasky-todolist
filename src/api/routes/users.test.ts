@@ -252,8 +252,24 @@ describe("edit", () => {
   });
 
   test("can delete user", async () => {
-    await api.delete("/api/user").set("cookie", cookies).expect(200);
+    await api
+      .delete("/api/user")
+      .set("cookie", cookies)
+      .send({ password: credentials.password })
+      .expect(200);
     await expect(user.reload()).rejects.toThrow(/does not exist anymore/);
+  });
+
+  test("cannot delete user without supplying password", async () => {
+    await api.delete("/api/user").set("cookie", cookies).expect(422);
+  });
+
+  test("cannot delete user using incorrect password", async () => {
+    await api
+      .delete("/api/user")
+      .set("cookie", cookies)
+      .send({ password: "notMyPassword" })
+      .expect(401);
   });
 
   test("can delete another user as an admin", async () => {

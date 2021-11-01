@@ -8,6 +8,7 @@ import {
   EditUserAdminSchema,
   EditUserSchema,
   LoginBodySchema,
+  PasswordSchema,
   RegisterSchema
 } from "../../schemas";
 import { COOKIE_TOKEN_NAME, DEVELOPMENT, SECRET_KEY } from "../../config";
@@ -149,16 +150,14 @@ router.post(
 router.delete(
   "/user",
   jwtAuth(),
+  yupSchema({ body: PasswordSchema }),
   asyncRoute(async (req: Request, res: Response) => {
-    const n = await UserModel.destroy({
-      where: {
-        id: req.user!.id
-      }
-    });
-    if (n > 0) {
+    const user = await UserModel.findByPk(req.user!.id);
+    if (user && (await user.validatePassword(req.body.password))) {
+      await user.destroy();
       return res.sendStatus(200);
     }
-    return res.sendStatus(404);
+    return res.sendStatus(401);
   })
 );
 

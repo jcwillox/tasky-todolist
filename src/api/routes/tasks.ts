@@ -2,7 +2,7 @@ import express, { Request, Response, Router } from "express";
 import { asyncRoute, jwtAuth, yupSchema } from "../middlewares";
 import TaskModel from "../database/models/tasks";
 import UserModel from "../database/models/users";
-import { TaskEditSchema, TaskSchema } from "../../schemas/tasks";
+import { TaskEditSchema, TaskSchema } from "../../schemas";
 
 const router = Router();
 

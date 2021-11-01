@@ -14,7 +14,7 @@ import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import FormikTextField from "../components/FormikTextField";
 import { Form, Formik } from "formik";
-import { TaskSchema } from "../schemas/tasks";
+import { TaskSchema } from "../schemas";
 import { useTasks } from "./TaskContext";
 import { LoadingButton } from "@mui/lab";
 import { Task } from "../models/task";

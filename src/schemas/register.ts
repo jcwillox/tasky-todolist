@@ -1,11 +1,22 @@
 import { ChangePassword, EditUser, NewUser } from "../models/user";
-
+import { LoginBody } from "../models/login";
 import { object, ref, SchemaOf, string } from "yup";
+
+const PasswordValidation = string().required().min(8).max(60);
+
+export const PasswordSchema = object({
+  password: PasswordValidation
+});
+
+export const LoginBodySchema: SchemaOf<LoginBody> = object({
+  username: string().required().max(32),
+  password: PasswordValidation
+});
 
 export const RegisterSchema: SchemaOf<NewUser> = object({
   name: string().optional().max(128),
   username: string().required().max(32),
-  password: string().required().min(8).max(60)
+  password: PasswordValidation
 });
 
 export const RegisterConfirmSchema = RegisterSchema.shape({
@@ -24,8 +35,8 @@ export const EditUserAdminSchema = EditUserSchema.shape({
 });
 
 export const ChangePasswordSchema: SchemaOf<ChangePassword> = object({
-  password: string().required().min(8).max(60),
-  newPassword: string().required().min(8).max(60)
+  password: PasswordValidation,
+  newPassword: PasswordValidation
 });
 
 export const ChangePasswordConfirmSchema = ChangePasswordSchema.shape({
