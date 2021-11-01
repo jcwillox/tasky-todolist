@@ -71,7 +71,8 @@ export default class UserModel
   @BeforeUpdate
   @BeforeCreate
   private static async hashPassword(user: UserModel) {
-    user.password = await bcrypt.hash(user.password, SALT_ROUNDS);
+    if (user.changed("password"))
+      user.password = await bcrypt.hash(user.password, SALT_ROUNDS);
   }
 
   validatePassword(password: string) {
