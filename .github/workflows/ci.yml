@@ -13,14 +13,11 @@ jobs:
         id: package
         run: |
           echo ::set-output name=node::$(jq --raw-output .engines.node ./package.json)
-          echo ::set-output name=npm::$(jq --raw-output .engines.npm ./package.json | sed 's/[>=]//g')
       - name: Setup node
         uses: actions/setup-node@v2
         with:
           node-version: ${{ steps.package.outputs.node }}
           cache: ${{ !env.ACT && 'npm' || '' }}
-      - name: Install npm
-        run: npm install -g npm@${{ steps.package.outputs.npm }}
       - name: Install dependancies
         run: npm ci
       - name: Run Lint
@@ -37,14 +34,11 @@ jobs:
       id: package
       run: |
         echo ::set-output name=node::$(jq --raw-output .engines.node ./package.json)
-        echo ::set-output name=npm::$(jq --raw-output .engines.npm ./package.json | sed 's/[>=]//g')
     - name: Setup node
       uses: actions/setup-node@v2
       with:
         node-version: ${{ steps.package.outputs.node }}
         cache: ${{ !env.ACT && 'npm' || '' }}
-    - name: Install npm
-      run: npm install -g npm@${{ steps.package.outputs.npm }}
     - name: Install dependancies
       run: npm ci
     - name: Run Build
