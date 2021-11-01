@@ -23,8 +23,12 @@ const AccountView = () => {
           p: 2
         }}
       >
-        <Jdenticon value={user!.name || user!.username} size={250} />
-        <Typography variant="h3" color="primary">
+        <Jdenticon value={user!.name} size={250} />
+        <Typography
+          variant="h3"
+          color="primary"
+          sx={{ textTransform: "capitalize" }}
+        >
           {user!.name}
         </Typography>
         <Typography variant="subtitle1">{user!.username}</Typography>

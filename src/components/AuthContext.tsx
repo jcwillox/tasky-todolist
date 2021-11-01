@@ -55,8 +55,7 @@ const useProvideAuth = () => {
 
   const editUser = useCallback(
     async (details: EditUser) => {
-      await api("/user", { method: "put", data: details });
-      setUser(user => ({ ...Object.assign(user, details) }));
+      setUser(await apiJSON("/user", details, "put"));
     },
     [setUser]
   );

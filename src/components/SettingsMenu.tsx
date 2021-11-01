@@ -52,14 +52,14 @@ const SettingsMenu = () => {
             }}
           >
             <Jdenticon
-              value={user.name || user.username}
+              value={user.name}
               size={32}
               sx={{
                 ml: -0.5,
                 mr: 1
               }}
             />
-            {user.name || user.username}
+            {user.name}
           </MenuItem>
         )}
         {user?.group === "admin" && (

@@ -108,8 +108,7 @@ router.put(
   asyncRoute(async (req: Request, res: Response) => {
     const user = await UserModel.findByPk(req.user!.id);
     if (user) {
-      await user.update(req.body);
-      return res.sendStatus(200);
+      return res.json((await user.update(req.body)).details());
     }
     return res.sendStatus(401);
   })
@@ -123,8 +122,7 @@ router.put(
   asyncRoute(async (req: Request, res: Response) => {
     const user = await UserModel.findByPk(req.params.id);
     if (user) {
-      await user.update(req.body);
-      return res.sendStatus(200);
+      return res.json((await user.update(req.body)).details());
     }
     return res.sendStatus(401);
   })

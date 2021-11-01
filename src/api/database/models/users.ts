@@ -16,6 +16,7 @@ import {
   AllowNull,
   BeforeCreate,
   BeforeUpdate,
+  BeforeValidate,
   Column,
   Default,
   HasMany,
@@ -25,8 +26,9 @@ import {
   Unique
 } from "sequelize-typescript";
 
-interface UserAttributes extends User, NewUser {}
-interface UserCreationAttributes extends Optional<UserAttributes, "id"> {}
+interface UserAttributes extends User, Omit<NewUser, "name"> {}
+interface UserCreationAttributes
+  extends Optional<UserAttributes, "id" | "name"> {}
 
 @Table({ tableName: "users" })
 export default class UserModel
@@ -43,8 +45,9 @@ export default class UserModel
   @Column(DataTypes.STRING(32))
   username!: string;
 
+  @AllowNull(false)
   @Column(DataTypes.STRING(128))
-  name!: string | null;
+  name!: string;
 
   @Column(DataTypes.STRING(24))
   group!: string | null;
@@ -73,6 +76,11 @@ export default class UserModel
   private static async hashPassword(user: UserModel) {
     if (user.changed("password"))
       user.password = await bcrypt.hash(user.password, SALT_ROUNDS);
+  }
+
+  @BeforeValidate
+  private static ensureNameExists(user: UserModel) {
+    if (!user.name) user.name = user.username;
   }
 
   validatePassword(password: string) {

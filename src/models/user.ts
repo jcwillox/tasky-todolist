@@ -5,6 +5,7 @@ export interface BaseUser {
 
 export interface User extends BaseUser {
   id: string;
+  name: string;
   group?: string | null;
 }
 

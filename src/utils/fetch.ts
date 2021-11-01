@@ -30,9 +30,10 @@ export type ValidationErrorItem = {
 /** Make a request to the backend that returns a JSON response */
 export const apiJSON = async (
   endpoint: string,
-  data?: object
+  data?: object,
+  method?: string
 ): Promise<any> => {
-  return (await api(endpoint, { data })).json();
+  return (await api(endpoint, { data, method })).json();
 };
 
 /** Make a request to the backend API */
