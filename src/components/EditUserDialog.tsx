@@ -25,6 +25,11 @@ const EditUserDialog = (props: DialogProps) => {
           }}
           validationSchema={EditUserSchema}
           onSubmit={async values => {
+            // included only changed values
+            for (const key in user)
+              if (values[key] === user[key]) {
+                delete values[key];
+              }
             await editUser(values);
             props.onClose();
           }}
