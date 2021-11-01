@@ -59,12 +59,14 @@ const RegisterView = () => {
                 placeholder="john.smith"
                 margin="dense"
                 fullWidth
+                required
               />
               <FormikPasswordField
                 name="password"
                 placeholder="Password"
                 margin="dense"
                 fullWidth
+                required
               />
               <FormikPasswordField
                 name="confirmPassword"
@@ -72,6 +74,7 @@ const RegisterView = () => {
                 placeholder="Confirm Password"
                 margin="dense"
                 fullWidth
+                required
               />
               <Box
                 sx={{
