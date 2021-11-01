@@ -11,7 +11,6 @@ import {
   Typography
 } from "@mui/material";
 import { Task } from "../models/task";
-import { amber, blue, red } from "@mui/material/colors";
 import {
   CheckCircleRounded as CheckCircleRoundedIcon,
   Delete as DeleteIcon,
@@ -22,13 +21,14 @@ import { useTasks } from "./TaskContext";
 import { bindMenu, bindTrigger } from "material-ui-popup-state/hooks";
 import { bindDialog, usePopoverState } from "../utils/popup-state";
 import AddTaskDialog from "./AddTaskDialog";
+import { PRIORITIES } from "../config";
 
 type TaskItemProps = {
   task: Task;
 };
 
 const CircleIcon = ({ priority }: { priority: number }) => {
-  const color = [red[500], amber[600], blue[500], ""][priority - 1];
+  const { color } = PRIORITIES[priority];
   return (
     <Box
       sx={{
