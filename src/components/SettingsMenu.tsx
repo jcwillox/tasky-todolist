@@ -18,30 +18,24 @@ import {
   Logout as LogoutIcon,
   MoreVert as MoreVertIcon
 } from "@mui/icons-material";
-import {
-  bindMenu,
-  bindTrigger,
-  usePopupState
-} from "material-ui-popup-state/hooks";
+import { bindMenu, bindTrigger } from "material-ui-popup-state/hooks";
 import { useThemeMode } from "./ThemeModeContext";
+import { usePopoverState } from "../utils/popup-state";
 
 const SettingsMenu = () => {
   const { user, logout } = useAuth();
   const { themeMode, switchThemeMode } = useThemeMode();
-  const popupState = usePopupState({
-    variant: "popover",
-    popupId: "settingsMenu"
-  });
+  const menu = usePopoverState("settingsMenu");
 
   return (
     <React.Fragment>
       <Tooltip title="Settings">
-        <IconButton color="inherit" {...bindTrigger(popupState)}>
+        <IconButton color="inherit" {...bindTrigger(menu)}>
           <MoreVertIcon />
         </IconButton>
       </Tooltip>
       <Menu
-        {...bindMenu(popupState)}
+        {...bindMenu(menu)}
         sx={{
           "& .MuiPaper-root": {
             minWidth: 180
@@ -50,7 +44,7 @@ const SettingsMenu = () => {
       >
         {user && (
           <MenuItem
-            onClick={popupState.close}
+            onClick={menu.close}
             component={Link}
             href="/account"
             sx={{
@@ -69,7 +63,7 @@ const SettingsMenu = () => {
           </MenuItem>
         )}
         {user?.group === "admin" && (
-          <MenuItem component={Link} href="/admin" onClick={popupState.close}>
+          <MenuItem component={Link} href="/admin" onClick={menu.close}>
             <ListItemIcon>
               <AdminPanelSettingsIcon fontSize="small" />
             </ListItemIcon>
@@ -86,7 +80,7 @@ const SettingsMenu = () => {
         {user && (
           <MenuItem
             onClick={() => {
-              popupState.close();
+              menu.close();
               logout();
             }}
           >

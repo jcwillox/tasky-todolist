@@ -10,17 +10,12 @@ import { useAuth } from "./AuthContext";
 import { EditUserSchema } from "../schemas";
 import FormikTextField from "./FormikTextField";
 import { LoadingButton } from "@mui/lab";
+import { DialogProps } from "../utils/popup-state";
 
-type EditUserProps = {
-  open: boolean;
-  onClose: () => void;
-};
-
-const EditUserDialog = ({ open, onClose }: EditUserProps) => {
+const EditUserDialog = (props: DialogProps) => {
   const { editUser, user } = useAuth();
-
   return (
-    <Dialog open={open} onClose={onClose} fullWidth>
+    <Dialog fullWidth {...props}>
       <DialogTitle>Edit User</DialogTitle>
       <DialogContent>
         <Formik
@@ -31,7 +26,7 @@ const EditUserDialog = ({ open, onClose }: EditUserProps) => {
           validationSchema={EditUserSchema}
           onSubmit={async values => {
             await editUser(values);
-            onClose();
+            props.onClose();
           }}
         >
           {({ isSubmitting }) => (
@@ -50,7 +45,7 @@ const EditUserDialog = ({ open, onClose }: EditUserProps) => {
                 fullWidth
               />
               <DialogActions>
-                <Button onClick={onClose}>Cancel</Button>
+                <Button onClick={props.onClose}>Cancel</Button>
                 <LoadingButton
                   type="submit"
                   variant="contained"

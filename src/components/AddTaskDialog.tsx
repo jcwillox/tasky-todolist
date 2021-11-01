@@ -18,14 +18,13 @@ import { TaskSchema } from "../schemas/tasks";
 import { useTasks } from "./TaskContext";
 import { LoadingButton } from "@mui/lab";
 import { Task } from "../models/task";
+import { DialogProps } from "../utils/popup-state";
 
-type AddTaskDialogProps = {
+interface AddTaskDialogProps extends DialogProps {
   task?: Task;
-  open: boolean;
-  onClose: () => void;
-};
+}
 
-const AddTaskDialog = ({ task, open, onClose }: AddTaskDialogProps) => {
+const AddTaskDialog = ({ task, ...props }: AddTaskDialogProps) => {
   const { addTask, updateTask } = useTasks();
 
   const priorityList = [
@@ -43,7 +42,7 @@ const AddTaskDialog = ({ task, open, onClose }: AddTaskDialogProps) => {
   };
 
   return (
-    <Dialog open={open} onClose={onClose} fullWidth>
+    <Dialog fullWidth {...props}>
       <DialogTitle>{task ? "Edit task" : "Add a new to-do"}</DialogTitle>
       <DialogContent>
         <Formik
@@ -55,7 +54,7 @@ const AddTaskDialog = ({ task, open, onClose }: AddTaskDialogProps) => {
             } else {
               await updateTask(task, values, true);
             }
-            onClose();
+            props.onClose();
           }}
         >
           {({ isSubmitting, setFieldValue, values }) => (
@@ -101,7 +100,7 @@ const AddTaskDialog = ({ task, open, onClose }: AddTaskDialogProps) => {
                 </LocalizationProvider>
               </Stack>
               <DialogActions>
-                <Button onClick={onClose}>Discard</Button>
+                <Button onClick={props.onClose}>Discard</Button>
                 <LoadingButton
                   type="submit"
                   variant="contained"

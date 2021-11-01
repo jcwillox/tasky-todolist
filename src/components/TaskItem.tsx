@@ -14,16 +14,13 @@ import { Task } from "../models/task";
 import { amber, blue, red } from "@mui/material/colors";
 import {
   CheckCircleRounded as CheckCircleRoundedIcon,
-  MoreVert as MoreVertIcon,
   Delete as DeleteIcon,
-  Edit as EditIcon
+  Edit as EditIcon,
+  MoreVert as MoreVertIcon
 } from "@mui/icons-material";
 import { useTasks } from "./TaskContext";
-import {
-  usePopupState,
-  bindTrigger,
-  bindMenu
-} from "material-ui-popup-state/hooks";
+import { bindMenu, bindTrigger } from "material-ui-popup-state/hooks";
+import { bindDialog, usePopoverState } from "../utils/popup-state";
 import AddTaskDialog from "./AddTaskDialog";
 
 type TaskItemProps = {
@@ -49,8 +46,8 @@ const CircleIcon = ({ priority }: { priority: number }) => {
 const TaskItem = ({ task }: TaskItemProps) => {
   const { toggleCompleted, deleteTask } = useTasks();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [open, setOpen] = useState(false);
-  const popUpState = usePopupState({ variant: "popover", popupId: "options" });
+  const optionsMenu = usePopoverState("options");
+  const editDialog = usePopoverState("editTaskDialog");
 
   const handleDelete = async () => {
     setIsSubmitting(true);
@@ -62,7 +59,7 @@ const TaskItem = ({ task }: TaskItemProps) => {
     <ListItem
       sx={{
         "& .MuiListItemSecondaryAction-root": {
-          visibility: popUpState.isOpen ? "visible" : "hidden"
+          visibility: optionsMenu.isOpen ? "visible" : "hidden"
         },
         "&:hover .MuiListItemSecondaryAction-root": {
           visibility: "visible"
@@ -70,11 +67,11 @@ const TaskItem = ({ task }: TaskItemProps) => {
       }}
       secondaryAction={
         <React.Fragment>
-          <IconButton edge="end" {...bindTrigger(popUpState)}>
+          <IconButton edge="end" {...bindTrigger(optionsMenu)}>
             <MoreVertIcon />
           </IconButton>
           <Menu
-            {...bindMenu(popUpState)}
+            {...bindMenu(optionsMenu)}
             sx={{
               "& .MuiPaper-root": {
                 minWidth: 160
@@ -92,9 +89,10 @@ const TaskItem = ({ task }: TaskItemProps) => {
               Delete task
             </MenuItem>
             <MenuItem
+              {...bindTrigger(editDialog)}
               onClick={() => {
-                setOpen(true);
-                popUpState.close();
+                editDialog.open();
+                optionsMenu.close();
               }}
             >
               <ListItemIcon>
@@ -132,7 +130,7 @@ const TaskItem = ({ task }: TaskItemProps) => {
           task.dueAt ? `(${task.dueAt.toLocaleString()})` : ""
         }`}
       />
-      <AddTaskDialog task={task} open={open} onClose={() => setOpen(false)} />
+      <AddTaskDialog task={task} {...bindDialog(editDialog)} />
     </ListItem>
   );
 };

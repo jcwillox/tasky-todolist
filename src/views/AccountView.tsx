@@ -1,15 +1,17 @@
-import React, { useState } from "react";
+import React from "react";
 import { Box, Button, Fade, Typography } from "@mui/material";
 import Jdenticon from "../components/Jdenticon";
 import { useAuth } from "../components/AuthContext";
 import EditIcon from "@mui/icons-material/Edit";
 import EditUserDialog from "../components/EditUserDialog";
 import ChangePasswordDialog from "../components/ChangePasswordDialog";
+import { bindDialog, usePopoverState } from "../utils/popup-state";
+import { bindTrigger } from "material-ui-popup-state/hooks";
 
 const AccountView = () => {
   const { user } = useAuth();
-  const [openEditUser, setEditUserOpen] = useState(false);
-  const [openChangePassword, setChangePasswordOpen] = useState(false);
+  const editDialog = usePopoverState("editUserDialog");
+  const passwordDialog = usePopoverState("changePasswordDialog");
   return (
     <Fade in={true}>
       <Box
@@ -26,7 +28,6 @@ const AccountView = () => {
           {user!.name}
         </Typography>
         <Typography variant="subtitle1">{user!.username}</Typography>
-
         <Box
           sx={{
             display: "inline-flex",
@@ -34,28 +35,18 @@ const AccountView = () => {
             mt: 1.2
           }}
         >
-          <Button
-            fullWidth
-            endIcon={<EditIcon />}
-            onClick={() => setEditUserOpen(true)}
-          >
+          <Button fullWidth endIcon={<EditIcon />} {...bindTrigger(editDialog)}>
             Edit Username
           </Button>
-          <EditUserDialog
-            open={openEditUser}
-            onClose={() => setEditUserOpen(false)}
-          />
           <Button
             fullWidth
             endIcon={<EditIcon />}
-            onClick={() => setChangePasswordOpen(true)}
+            {...bindTrigger(passwordDialog)}
           >
             Change Password
           </Button>
-          <ChangePasswordDialog
-            open={openChangePassword}
-            onClose={() => setChangePasswordOpen(false)}
-          />
+          <EditUserDialog {...bindDialog(editDialog)} />
+          <ChangePasswordDialog {...bindDialog(passwordDialog)} />
         </Box>
       </Box>
     </Fade>

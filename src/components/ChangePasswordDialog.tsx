@@ -10,16 +10,12 @@ import { useAuth } from "./AuthContext";
 import FormikPasswordField from "./FormikPasswordField";
 import { LoadingButton } from "@mui/lab";
 import { ChangePasswordConfirmSchema } from "../schemas";
+import { DialogProps } from "../utils/popup-state";
 
-type ChangePasswordProps = {
-  open: boolean;
-  onClose: () => void;
-};
-
-const ChangePasswordDialog = ({ open, onClose }: ChangePasswordProps) => {
+const ChangePasswordDialog = (props: DialogProps) => {
   const { changePassword } = useAuth();
   return (
-    <Dialog open={open} onClose={onClose} fullWidth>
+    <Dialog open={props.open} onClose={props.onClose} fullWidth>
       <DialogTitle>Change Password</DialogTitle>
       <DialogContent>
         <Formik
@@ -31,7 +27,7 @@ const ChangePasswordDialog = ({ open, onClose }: ChangePasswordProps) => {
           validationSchema={ChangePasswordConfirmSchema}
           onSubmit={async values => {
             await changePassword(values);
-            onClose();
+            props.onClose();
           }}
         >
           {({ isSubmitting }) => (
@@ -63,7 +59,7 @@ const ChangePasswordDialog = ({ open, onClose }: ChangePasswordProps) => {
                 fullWidth
               />
               <DialogActions>
-                <Button onClick={onClose}>Cancel</Button>
+                <Button onClick={props.onClose}>Cancel</Button>
                 <LoadingButton
                   type="submit"
                   variant="contained"

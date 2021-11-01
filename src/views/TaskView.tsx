@@ -1,13 +1,15 @@
 import { Box, Button, List, Typography } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import TaskItem from "../components/TaskItem";
 import { useTasks } from "../components/TaskContext";
 import AddIcon from "@mui/icons-material/Add";
 import AddTaskDialog from "../components/AddTaskDialog";
+import { bindTrigger } from "material-ui-popup-state/hooks";
+import { bindDialog, usePopoverState } from "../utils/popup-state";
 
 const TaskView = () => {
   const { tasks, reload } = useTasks();
-  const [open, setOpen] = useState(false);
+  const dialog = usePopoverState("addTaskDialog");
 
   useEffect(() => {
     reload();
@@ -25,7 +27,7 @@ const TaskView = () => {
         variant="contained"
         color="primary"
         startIcon={<AddIcon />}
-        onClick={() => setOpen(!open)}
+        {...bindTrigger(dialog)}
         sx={{
           alignSelf: "center",
           mb: 5
@@ -34,7 +36,7 @@ const TaskView = () => {
         Add a new to-do
       </Button>
 
-      <AddTaskDialog open={open} onClose={() => setOpen(!open)} />
+      <AddTaskDialog {...bindDialog(dialog)} />
 
       {/* Display a list of To-dos */}
       <Typography variant="h3">To-Do List</Typography>
