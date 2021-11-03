@@ -15,16 +15,22 @@ const AppHeader = () => {
       }}
     >
       <Toolbar>
-        <Link href="/" color="inherit" underline="none">
+        <Link
+          href="/"
+          color="inherit"
+          underline="none"
+          sx={{ ml: -1.5, mr: 2 }}
+        >
           <Box
             sx={{
-              marginLeft: -1.5,
-              marginRight: 2,
               padding: 0.8,
               width: 42,
               height: 42,
               boxShadow: 4,
-              backgroundColor: "primary.main",
+              backgroundColor: theme =>
+                theme.palette.mode === "light"
+                  ? theme.palette.primary.main
+                  : "",
               borderRadius: 1.5
             }}
           >

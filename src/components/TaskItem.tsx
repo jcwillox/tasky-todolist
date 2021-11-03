@@ -74,10 +74,22 @@ const TaskItem = ({ task }: TaskItemProps) => {
             {...bindMenu(optionsMenu)}
             sx={{
               "& .MuiPaper-root": {
-                minWidth: 160
+                minWidth: 130
               }
             }}
           >
+            <MenuItem
+              {...bindTrigger(editDialog)}
+              onClick={ev => {
+                editDialog.open(ev);
+                optionsMenu.close();
+              }}
+            >
+              <ListItemIcon>
+                <EditIcon fontSize="small" />
+              </ListItemIcon>
+              Edit
+            </MenuItem>
             <MenuItem onClick={handleDelete}>
               <ListItemIcon>
                 {isSubmitting ? (
@@ -86,19 +98,7 @@ const TaskItem = ({ task }: TaskItemProps) => {
                   <DeleteIcon fontSize="small" />
                 )}
               </ListItemIcon>
-              Delete task
-            </MenuItem>
-            <MenuItem
-              {...bindTrigger(editDialog)}
-              onClick={() => {
-                editDialog.open();
-                optionsMenu.close();
-              }}
-            >
-              <ListItemIcon>
-                <EditIcon fontSize="small" />
-              </ListItemIcon>
-              Edit task
+              Delete
             </MenuItem>
           </Menu>
         </React.Fragment>
@@ -106,12 +106,7 @@ const TaskItem = ({ task }: TaskItemProps) => {
       divider
       dense
     >
-      <IconButton
-        sx={{
-          marginLeft: -1
-        }}
-        onClick={() => toggleCompleted(task)}
-      >
+      <IconButton sx={{ marginLeft: -1 }} onClick={() => toggleCompleted(task)}>
         {task.completed ? (
           <CheckCircleRoundedIcon color="primary" />
         ) : (
