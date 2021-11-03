@@ -16,12 +16,15 @@ import AddIcon from "@mui/icons-material/Add";
 import AddTaskDialog from "../components/AddTaskDialog";
 import { bindTrigger } from "material-ui-popup-state/hooks";
 import { bindDialog, usePopoverState } from "../utils/popup-state";
+import { useHotkeys } from "react-hotkeys-hook";
 import LoadingBar from "../components/LoadingBar";
 
 const TaskView = () => {
   const { tasks, isReloading, reload } = useTasks();
   const dialog = usePopoverState("addTaskDialog");
+  const listEl = useRef<HTMLLIElement>(null);
 
+  useHotkeys("alt+q", () => listEl.current?.click());
   useEffect(() => {
     reload();
   }, [reload]);
@@ -55,11 +58,15 @@ const TaskView = () => {
               }
             }}
           >
-            <ListItemButton {...bindTrigger(dialog)}>
+            {/*@ts-ignore*/}
+            <ListItemButton ref={listEl} {...bindTrigger(dialog)}>
               <ListItemIcon>
                 <AddIcon />
               </ListItemIcon>
               <ListItemText sx={{ ml: -1 }} primary="Add Task" />
+              <Typography variant="body2" color="text.secondary">
+                Alt+Q
+              </Typography>
             </ListItemButton>
           </ListItem>
           <List sx={{ paddingTop: 0 }}>
