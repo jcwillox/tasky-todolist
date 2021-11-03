@@ -20,16 +20,17 @@ const bulkDeleteAndCreate = async (
 console.log("DATABASE:", process.env.DATABASE_URL);
 
 (async () => {
+  const USER_ID = "15d0fdf1-a589-4144-8703-77eafedd574b";
   await database.connect();
   /* remove existing user and tasks */
   await UserModel.destroy({
     where: {
-      id: "15d0fdf1-a589-4144-8703-77eafedd574b"
+      id: USER_ID
     }
   });
   /* add default user */
   await UserModel.create({
-    id: "15d0fdf1-a589-4144-8703-77eafedd574b",
+    id: USER_ID,
     username: "david",
     name: "David",
     password: "12345678",
@@ -53,7 +54,7 @@ console.log("DATABASE:", process.env.DATABASE_URL);
   await TaskModel.bulkCreate([
     {
       id: "2220f0ee-49d3-4847-9b75-9dbcfce971e7",
-      userId: "15d0fdf1-a589-4144-8703-77eafedd574b",
+      userId: USER_ID,
       name: "Task 1",
       description: null,
       priority: 4,
@@ -62,7 +63,7 @@ console.log("DATABASE:", process.env.DATABASE_URL);
     },
     {
       id: "0d40a792-9d19-4583-9aa4-3105a788ba07",
-      userId: "15d0fdf1-a589-4144-8703-77eafedd574b",
+      userId: USER_ID,
       name: "Task 2",
       description: "With a description!",
       priority: 4,
@@ -71,7 +72,7 @@ console.log("DATABASE:", process.env.DATABASE_URL);
     },
     {
       id: "6c616526-d9a8-4abd-95db-f0cadc0520f5",
-      userId: "15d0fdf1-a589-4144-8703-77eafedd574b",
+      userId: USER_ID,
       name: "Task 3",
       description: "I have a due date",
       priority: 4,
@@ -80,7 +81,7 @@ console.log("DATABASE:", process.env.DATABASE_URL);
     },
     {
       id: "563d65c1-c5f0-4833-b26f-cf4478f97220",
-      userId: "15d0fdf1-a589-4144-8703-77eafedd574b",
+      userId: USER_ID,
       name: "Task 4: Low Priority",
       description: null,
       priority: 3,
@@ -89,7 +90,7 @@ console.log("DATABASE:", process.env.DATABASE_URL);
     },
     {
       id: "3eeb92c3-5167-4519-8d28-500c69a5ee2c",
-      userId: "15d0fdf1-a589-4144-8703-77eafedd574b",
+      userId: USER_ID,
       name: "Task 4: Medium Priority",
       description: null,
       priority: 2,
@@ -98,7 +99,7 @@ console.log("DATABASE:", process.env.DATABASE_URL);
     },
     {
       id: "fb027f47-023a-4151-8009-99b9e9df735d",
-      userId: "15d0fdf1-a589-4144-8703-77eafedd574b",
+      userId: USER_ID,
       name: "Task 4: Top Priority",
       description: null,
       priority: 1,
@@ -107,16 +108,28 @@ console.log("DATABASE:", process.env.DATABASE_URL);
     },
     {
       id: "aa59b8d6-e469-47cd-b392-bae4e35bf18c",
-      userId: "15d0fdf1-a589-4144-8703-77eafedd574b",
+      userId: USER_ID,
       name: "Task 5",
       description: null,
       priority: 4,
       completed: true,
       dueAt: null
     },
+    { userId: USER_ID, name: "Task 7" },
+    { userId: USER_ID, name: "Task 8" },
+    { userId: USER_ID, name: "Task 9" },
+    { userId: USER_ID, name: "Task Item 1" },
+    { userId: USER_ID, name: "Task Item 2" },
+    { userId: USER_ID, name: "Task Item 3" },
+    { userId: USER_ID, name: "Task Item 4" },
+    { userId: USER_ID, name: "Task Item 5" },
+    { userId: USER_ID, name: "Task Item 6" },
+    { userId: USER_ID, name: "Task Item 7" },
+    { userId: USER_ID, name: "Task Item 8" },
+    { userId: USER_ID, name: "Task Item 9" },
     {
       id: "31c4a07a-584a-44f4-95e9-2c41ff579f8f",
-      userId: "15d0fdf1-a589-4144-8703-77eafedd574b",
+      userId: USER_ID,
       name: "Task 6",
       description: "I've been completed",
       priority: 4,
