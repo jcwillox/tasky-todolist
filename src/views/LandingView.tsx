@@ -10,7 +10,10 @@ const LandingView = () => {
           display: "flex",
           alignItems: "center",
           flexDirection: "column",
-          mt: 2
+          mt: {
+            xs: 4,
+            md: 5
+          }
         }}
       >
         <Box

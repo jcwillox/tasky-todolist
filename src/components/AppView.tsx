@@ -11,7 +11,12 @@ const AppView = ({ children }) => {
       sx={{
         display: "flex",
         flexGrow: 1,
-        justifyContent: "center"
+        justifyContent: "center",
+        padding: {
+          xs: 1,
+          sm: 2,
+          md: 3
+        }
       }}
     >
       {children}

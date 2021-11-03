@@ -3,6 +3,7 @@ import { api, apiJSON } from "../utils/fetch";
 import { User } from "../models/user";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useAsyncError } from "../hooks/use-async";
+import { Box } from "@mui/material";
 import {
   DataGrid,
   GridActionsCellItem,
@@ -37,7 +38,7 @@ const AdminView = () => {
         field: "id",
         type: "string",
         headerName: "ID",
-        flex: 0.5
+        flex: 1
       },
       {
         field: "username",
@@ -76,7 +77,9 @@ const AdminView = () => {
   );
 
   return (
-    <DataGrid rows={users} loading={loading} columns={columns} pagination />
+    <Box sx={{ p: { xs: 1, sm: 2, md: 3 }, flex: 1 }}>
+      <DataGrid rows={users} loading={loading} columns={columns} pagination />
+    </Box>
   );
 };
 

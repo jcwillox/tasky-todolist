@@ -14,11 +14,7 @@ const AppbarOffset = styled("div")(({ theme }) => theme.mixins.toolbar);
 const containerStyle: SxProps<Theme> = {
   height: "100vh",
   display: "flex",
-  flexDirection: "column",
-  padding: {
-    xs: 2,
-    md: 3
-  }
+  flexDirection: "column"
 };
 
 function App() {
@@ -29,7 +25,7 @@ function App() {
           <CssBaseline />
           <BrowserRouter>
             <AppHeader />
-            <Container maxWidth="md" disableGutters sx={containerStyle}>
+            <Container maxWidth={false} disableGutters sx={containerStyle}>
               <AppbarOffset />
               <Suspense fallback={<LoadingBar />}>
                 <AppContent />
