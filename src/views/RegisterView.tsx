@@ -50,12 +50,14 @@ const RegisterView = () => {
             <Form>
               <FormikTextField
                 name="name"
+                autoComplete="name"
                 placeholder="John Smith"
                 margin="dense"
                 fullWidth
               />
               <FormikTextField
                 name="username"
+                autoComplete="username"
                 placeholder="john.smith"
                 margin="dense"
                 fullWidth
@@ -63,6 +65,7 @@ const RegisterView = () => {
               />
               <FormikPasswordField
                 name="password"
+                autoComplete="new-password"
                 placeholder="Password"
                 margin="dense"
                 fullWidth
@@ -70,6 +73,7 @@ const RegisterView = () => {
               />
               <FormikPasswordField
                 name="confirmPassword"
+                autoComplete="new-password"
                 label="Confirm Password"
                 placeholder="Confirm Password"
                 margin="dense"

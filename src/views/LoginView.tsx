@@ -47,12 +47,14 @@ const LoginView = () => {
             <Form>
               <FormikTextField
                 name="username"
+                autoComplete="username"
                 placeholder="john.smith"
                 margin="dense"
                 fullWidth
               />
               <FormikPasswordField
                 name="password"
+                autoComplete="current-password"
                 placeholder="Password"
                 margin="dense"
                 fullWidth
