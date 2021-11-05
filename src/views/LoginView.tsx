@@ -1,13 +1,15 @@
+import { useState } from "react";
 import AppFormTitle from "../components/AppFormTitle";
 import AppView from "../components/AppView";
 import { Form as FormikForm, Formik } from "formik";
-import { Box, Button, styled } from "@mui/material";
+import { Alert, Box, Button, styled } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import { LoginBodySchema } from "../schemas";
 import { useAuth } from "../components/AuthContext";
 import FormikTextField from "../components/FormikTextField";
 import FormikPasswordField from "../components/FormikPasswordField";
 import { useAsyncError } from "../hooks/use-async";
+import { ApiError } from "../utils/fetch";
 
 const Form = styled(FormikForm)({
   maxWidth: 328,
@@ -15,6 +17,7 @@ const Form = styled(FormikForm)({
 });
 
 const LoginView = () => {
+  const [showErr, setShowErr] = useState(false);
   const auth = useAuth();
   const wrapAsync = useAsyncError();
   return (
@@ -40,11 +43,30 @@ const LoginView = () => {
           }}
           validationSchema={LoginBodySchema}
           onSubmit={async values => {
-            await wrapAsync(auth.login(values));
+            await wrapAsync(
+              auth.login(values).catch(err => {
+                if (err instanceof ApiError && err.res.status === 401) {
+                  setShowErr(true);
+                } else {
+                  throw err;
+                }
+              })
+            );
           }}
         >
           {({ isSubmitting }) => (
             <Form>
+              {showErr ? (
+                <Alert
+                  variant="outlined"
+                  severity="error"
+                  sx={{ mt: 1, width: "100%" }}
+                >
+                  Incorrect username or password
+                </Alert>
+              ) : (
+                ""
+              )}
               <FormikTextField
                 name="username"
                 autoComplete="username"
