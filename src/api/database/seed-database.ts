@@ -1,10 +1,5 @@
-import database from "./database/database";
-import UserModel from "./database/models/users";
-import TaskModel from "./database/models/tasks";
-
-if (!process.env.DATABASE_URL) {
-  process.env.DATABASE_URL = "sqlite:src/api/db.sqlite";
-}
+import UserModel from "./models/users";
+import TaskModel from "./models/tasks";
 
 const bulkDeleteAndCreate = async (
   records: UserModel["_creationAttributes"][]
@@ -17,11 +12,8 @@ const bulkDeleteAndCreate = async (
   await UserModel.bulkCreate(records);
 };
 
-console.log("DATABASE:", process.env.DATABASE_URL);
-
-(async () => {
+export const seedDatabase = async () => {
   const USER_ID = "15d0fdf1-a589-4144-8703-77eafedd574b";
-  await database.connect();
   /* remove existing user and tasks */
   await UserModel.destroy({
     where: {
@@ -137,6 +129,4 @@ console.log("DATABASE:", process.env.DATABASE_URL);
       dueAt: null
     }
   ]);
-  await database.disconnect();
-  console.log("Done!");
-})();
+};
