@@ -53,6 +53,7 @@ const EditUserDialog = (props: DialogProps) => {
             <Form>
               <FormikTextField
                 autoFocus
+                autoComplete="name"
                 name="name"
                 margin="dense"
                 placeholder="John Smith"
@@ -60,6 +61,7 @@ const EditUserDialog = (props: DialogProps) => {
               />
               <FormikTextField
                 name="username"
+                autoComplete="username"
                 margin="dense"
                 placeholder="john.smith"
                 fullWidth

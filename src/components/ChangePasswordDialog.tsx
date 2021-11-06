@@ -49,7 +49,7 @@ const ChangePasswordDialog = (props: DialogProps) => {
             <Form>
               {showErr && (
                 <Alert severity="error" sx={{ mb: 0.5 }}>
-                  Incorrect username or password
+                  Incorrect current password
                 </Alert>
               )}
               <FormikPasswordField

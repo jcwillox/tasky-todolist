@@ -56,12 +56,10 @@ const LoginView = () => {
         >
           {({ isSubmitting }) => (
             <Form>
-              {showErr ? (
-                <Alert severity="error" sx={{ mb: 1, width: "100%" }}>
+              {showErr && (
+                <Alert severity="error" sx={{ mb: 1 }}>
                   Incorrect username or password
                 </Alert>
-              ) : (
-                ""
               )}
               <FormikTextField
                 name="username"
