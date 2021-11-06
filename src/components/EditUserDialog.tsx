@@ -83,6 +83,3 @@ const EditUserDialog = (props: DialogProps) => {
 };
 
 export default EditUserDialog;
-function useAsyncErrorError() {
-  throw new Error("Function not implemented.");
-}
