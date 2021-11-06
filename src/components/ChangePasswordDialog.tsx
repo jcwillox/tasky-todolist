@@ -1,4 +1,6 @@
+import { useState } from "react";
 import {
+  Alert,
   Button,
   Dialog,
   DialogActions,
@@ -11,8 +13,12 @@ import FormikPasswordField from "./FormikPasswordField";
 import { LoadingButton } from "@mui/lab";
 import { ChangePasswordConfirmSchema } from "../schemas";
 import { DialogProps } from "../utils/popup-state";
+import { ApiError } from "../utils/fetch";
+import { useAsyncError } from "../hooks/use-async";
 
 const ChangePasswordDialog = (props: DialogProps) => {
+  const [showErr, setShowErr] = useState(false);
+  const wrapAsync = useAsyncError();
   const { changePassword } = useAuth();
   return (
     <Dialog open={props.open} onClose={props.onClose} fullWidth>
@@ -26,12 +32,26 @@ const ChangePasswordDialog = (props: DialogProps) => {
           }}
           validationSchema={ChangePasswordConfirmSchema}
           onSubmit={async values => {
-            await changePassword(values);
-            props.onClose();
+            await wrapAsync(
+              changePassword(values)
+                .then(props.onClose)
+                .catch(err => {
+                  if (err instanceof ApiError && err.res.status === 401) {
+                    setShowErr(true);
+                  } else {
+                    throw err;
+                  }
+                })
+            );
           }}
         >
           {({ isSubmitting }) => (
             <Form>
+              {showErr && (
+                <Alert severity="error" sx={{ mb: 0.5 }}>
+                  Incorrect current password
+                </Alert>
+              )}
               <FormikPasswordField
                 autoFocus
                 name="password"

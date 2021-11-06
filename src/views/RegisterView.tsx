@@ -9,6 +9,7 @@ import { useAuth } from "../components/AuthContext";
 import FormikTextField from "../components/FormikTextField";
 import FormikPasswordField from "../components/FormikPasswordField";
 import { useAsyncError } from "../hooks/use-async";
+import { ApiValidationError } from "../utils/fetch";
 
 const Form = styled(FormikForm)({
   maxWidth: 328,
@@ -42,20 +43,33 @@ const RegisterView = () => {
             confirmPassword: ""
           }}
           validationSchema={RegisterConfirmSchema}
-          onSubmit={async values => {
-            await wrapAsync(auth.register(values));
+          onSubmit={async (values, { setFieldError }) => {
+            await wrapAsync(
+              auth.register(values).catch(err => {
+                if (err instanceof ApiValidationError) {
+                  err.errors.forEach(item => {
+                    setFieldError(item.path, item.message);
+                  });
+                } else {
+                  throw err;
+                }
+              })
+            );
           }}
         >
           {({ isSubmitting }) => (
             <Form>
               <FormikTextField
                 name="name"
+                autoComplete="name"
+                autoFocus
                 placeholder="John Smith"
                 margin="dense"
                 fullWidth
               />
               <FormikTextField
                 name="username"
+                autoComplete="username"
                 placeholder="john.smith"
                 margin="dense"
                 fullWidth
@@ -63,6 +77,7 @@ const RegisterView = () => {
               />
               <FormikPasswordField
                 name="password"
+                autoComplete="new-password"
                 placeholder="Password"
                 margin="dense"
                 fullWidth
@@ -70,6 +85,7 @@ const RegisterView = () => {
               />
               <FormikPasswordField
                 name="confirmPassword"
+                autoComplete="new-password"
                 label="Confirm Password"
                 placeholder="Confirm Password"
                 margin="dense"
