@@ -11,6 +11,7 @@ import { EditUserSchema } from "../schemas";
 import FormikTextField from "./FormikTextField";
 import { LoadingButton } from "@mui/lab";
 import { DialogProps } from "../utils/popup-state";
+import { ApiValidationError } from "../utils/fetch";
 
 const EditUserDialog = (props: DialogProps) => {
   const { editUser, user } = useAuth();
@@ -24,14 +25,24 @@ const EditUserDialog = (props: DialogProps) => {
             username: user!.username
           }}
           validationSchema={EditUserSchema}
-          onSubmit={async values => {
+          onSubmit={async (values, { setFieldError }) => {
             // included only changed values
             for (const key in user)
               if (values[key] === user[key]) {
                 delete values[key];
               }
-            await editUser(values);
-            props.onClose();
+            try {
+              await editUser(values);
+              props.onClose();
+            } catch (err) {
+              if (err instanceof ApiValidationError) {
+                err.errors.forEach(item => {
+                  setFieldError(item.path, item.message);
+                });
+              } else {
+                throw err;
+              }
+            }
           }}
         >
           {({ isSubmitting }) => (
