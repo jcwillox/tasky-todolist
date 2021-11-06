@@ -12,8 +12,10 @@ import FormikTextField from "./FormikTextField";
 import { LoadingButton } from "@mui/lab";
 import { DialogProps } from "../utils/popup-state";
 import { ApiValidationError } from "../utils/fetch";
+import { useAsyncError } from "../hooks/use-async";
 
 const EditUserDialog = (props: DialogProps) => {
+  const wrapAsync = useAsyncError();
   const { editUser, user } = useAuth();
   return (
     <Dialog fullWidth {...props}>
@@ -27,22 +29,24 @@ const EditUserDialog = (props: DialogProps) => {
           validationSchema={EditUserSchema}
           onSubmit={async (values, { setFieldError }) => {
             // included only changed values
-            for (const key in user)
+            for (const key in user) {
               if (values[key] === user[key]) {
                 delete values[key];
               }
-            try {
-              await editUser(values);
-              props.onClose();
-            } catch (err) {
-              if (err instanceof ApiValidationError) {
-                err.errors.forEach(item => {
-                  setFieldError(item.path, item.message);
-                });
-              } else {
-                throw err;
-              }
             }
+            await wrapAsync(
+              editUser(values)
+                .then(props.onClose)
+                .catch(err => {
+                  if (err instanceof ApiValidationError) {
+                    err.errors.forEach(item => {
+                      setFieldError(item.path, item.message);
+                    });
+                  } else {
+                    throw err;
+                  }
+                })
+            );
           }}
         >
           {({ isSubmitting }) => (
@@ -53,14 +57,12 @@ const EditUserDialog = (props: DialogProps) => {
                 margin="dense"
                 placeholder="John Smith"
                 fullWidth
-                InputLabelProps={{ shrink: true }}
               />
               <FormikTextField
                 name="username"
                 margin="dense"
                 placeholder="john.smith"
                 fullWidth
-                InputLabelProps={{ shrink: true }}
               />
               <DialogActions>
                 <Button onClick={props.onClose}>Cancel</Button>
@@ -81,3 +83,6 @@ const EditUserDialog = (props: DialogProps) => {
 };
 
 export default EditUserDialog;
+function useAsyncErrorError() {
+  throw new Error("Function not implemented.");
+}

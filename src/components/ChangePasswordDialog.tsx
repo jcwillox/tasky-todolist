@@ -14,9 +14,11 @@ import { LoadingButton } from "@mui/lab";
 import { ChangePasswordConfirmSchema } from "../schemas";
 import { DialogProps } from "../utils/popup-state";
 import { ApiError } from "../utils/fetch";
+import { useAsyncError } from "../hooks/use-async";
 
 const ChangePasswordDialog = (props: DialogProps) => {
   const [showErr, setShowErr] = useState(false);
+  const wrapAsync = useAsyncError();
   const { changePassword } = useAuth();
   return (
     <Dialog open={props.open} onClose={props.onClose} fullWidth>
@@ -29,25 +31,26 @@ const ChangePasswordDialog = (props: DialogProps) => {
             confirmPassword: ""
           }}
           validationSchema={ChangePasswordConfirmSchema}
-          onSubmit={async (values, { setFieldError }) => {
-            try {
-              await changePassword(values);
-              props.onClose();
-            } catch (error) {
-              if (error instanceof ApiError && error.res.status === 401) {
-                setShowErr(true);
-              } else {
-                throw error;
-              }
-            }
+          onSubmit={async values => {
+            await wrapAsync(
+              changePassword(values)
+                .then(props.onClose)
+                .catch(err => {
+                  if (err instanceof ApiError && err.res.status === 401) {
+                    setShowErr(true);
+                  } else {
+                    throw err;
+                  }
+                })
+            );
           }}
         >
           {({ isSubmitting }) => (
             <Form>
-              {showErr ? (
-                <Alert severity="error">Incorrect current password</Alert>
-              ) : (
-                ""
+              {showErr && (
+                <Alert severity="error" sx={{ mb: 0.5 }}>
+                  Incorrect username or password
+                </Alert>
               )}
               <FormikPasswordField
                 autoFocus
