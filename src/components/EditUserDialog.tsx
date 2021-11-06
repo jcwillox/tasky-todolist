@@ -53,12 +53,14 @@ const EditUserDialog = (props: DialogProps) => {
                 margin="dense"
                 placeholder="John Smith"
                 fullWidth
+                InputLabelProps={{ shrink: true }}
               />
               <FormikTextField
                 name="username"
                 margin="dense"
                 placeholder="john.smith"
                 fullWidth
+                InputLabelProps={{ shrink: true }}
               />
               <DialogActions>
                 <Button onClick={props.onClose}>Cancel</Button>
