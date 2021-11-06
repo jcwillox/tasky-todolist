@@ -6,7 +6,6 @@ import {
   IconButton,
   Link,
   ListItemIcon,
-  ListItemText,
   Menu,
   MenuItem,
   Tooltip
@@ -16,14 +15,16 @@ import {
   AdminPanelSettings as AdminPanelSettingsIcon,
   InvertColors as InvertColorsIcon,
   Logout as LogoutIcon,
-  MoreVert as MoreVertIcon
+  MoreVert as MoreVertIcon,
+  RestoreOutlined as RestoreOutlinedIcon
 } from "@mui/icons-material";
 import { bindMenu, bindTrigger } from "material-ui-popup-state/hooks";
 import { useThemeMode } from "./ThemeModeContext";
 import { usePopoverState } from "../utils/popup-state";
+import LoadingMenuItem from "./LoadingMenuItem";
 
 const SettingsMenu = () => {
-  const { user, logout } = useAuth();
+  const { user, logout, resetDB } = useAuth();
   const { themeMode, switchThemeMode } = useThemeMode();
   const menu = usePopoverState("settingsMenu");
 
@@ -38,7 +39,7 @@ const SettingsMenu = () => {
         {...bindMenu(menu)}
         sx={{
           "& .MuiPaper-root": {
-            minWidth: 180
+            minWidth: 200
           }
         }}
       >
@@ -75,7 +76,7 @@ const SettingsMenu = () => {
           <ListItemIcon>
             <InvertColorsIcon fontSize="small" />
           </ListItemIcon>
-          <ListItemText>Theme: {capitalize(themeMode)}</ListItemText>
+          Theme: {capitalize(themeMode)}
         </MenuItem>
         {user && (
           <MenuItem
@@ -90,6 +91,13 @@ const SettingsMenu = () => {
             Logout
           </MenuItem>
         )}
+        <Divider />
+        <LoadingMenuItem
+          onClick={resetDB}
+          icon={<RestoreOutlinedIcon fontSize="small" />}
+        >
+          Reset Database
+        </LoadingMenuItem>
       </Menu>
     </React.Fragment>
   );

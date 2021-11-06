@@ -14,6 +14,7 @@ import {
 import { COOKIE_TOKEN_NAME, DEVELOPMENT, SECRET_KEY } from "../../config";
 import { CookieOptions } from "express-serve-static-core";
 import { Op } from "sequelize";
+import { seedDatabase } from "../database/seed-database";
 
 const cookieToken = async (
   user: UserModel
@@ -173,6 +174,18 @@ router.delete(
       return res.sendStatus(200);
     }
     return res.sendStatus(404);
+  })
+);
+
+/**
+ * Reset database to default, this is not a safe route and only exists to
+ * facilitate interactive testing and demos.
+ */
+router.post(
+  "/reset",
+  asyncRoute(async (req: Request, res: Response) => {
+    await seedDatabase();
+    return res.sendStatus(200);
   })
 );
 

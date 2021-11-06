@@ -60,6 +60,11 @@ const useProvideAuth = () => {
     [setUser]
   );
 
+  const resetDB = useCallback(async () => {
+    await api("/reset", { method: "POST" });
+    window.location.reload();
+  }, []);
+
   // kick-off background check that the user is still authenticated
   useEffect(() => {
     validate();
@@ -72,7 +77,8 @@ const useProvideAuth = () => {
     register,
     validate,
     changePassword,
-    editUser
+    editUser,
+    resetDB
   };
 };
 
