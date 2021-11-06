@@ -1,7 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   Box,
-  CircularProgress,
   IconButton,
   ListItem,
   ListItemIcon,
@@ -22,6 +21,7 @@ import { bindMenu, bindTrigger } from "material-ui-popup-state/hooks";
 import { bindDialog, usePopoverState } from "../utils/popup-state";
 import AddTaskDialog from "./AddTaskDialog";
 import { PRIORITIES } from "../config";
+import LoadingMenuItem from "./LoadingMenuItem";
 
 type TaskItemProps = {
   task: Task;
@@ -45,15 +45,8 @@ const CircleIcon = ({ priority }: { priority: number }) => {
 
 const TaskItem = ({ task }: TaskItemProps) => {
   const { toggleCompleted, deleteTask } = useTasks();
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const optionsMenu = usePopoverState("options");
   const editDialog = usePopoverState("editTaskDialog");
-
-  const handleDelete = async () => {
-    setIsSubmitting(true);
-    await deleteTask(task);
-    setIsSubmitting(false);
-  };
 
   return (
     <ListItem
@@ -90,16 +83,12 @@ const TaskItem = ({ task }: TaskItemProps) => {
               </ListItemIcon>
               Edit
             </MenuItem>
-            <MenuItem onClick={handleDelete}>
-              <ListItemIcon>
-                {isSubmitting ? (
-                  <CircularProgress size={24} />
-                ) : (
-                  <DeleteIcon fontSize="small" />
-                )}
-              </ListItemIcon>
+            <LoadingMenuItem
+              onClick={() => deleteTask(task)}
+              icon={<DeleteIcon fontSize="small" />}
+            >
               Delete
-            </MenuItem>
+            </LoadingMenuItem>
           </Menu>
         </React.Fragment>
       }
