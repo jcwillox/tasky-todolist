@@ -206,6 +206,36 @@ describe("edit", () => {
     });
   });
 
+  test("can update users name", async () => {
+    await api
+      .put("/api/user")
+      .set("cookie", cookies)
+      .send({
+        name: "David"
+      })
+      .expect(200)
+      .expect({
+        id: credentials.id,
+        name: "David",
+        username: credentials.username
+      });
+  });
+
+  test("can update users username", async () => {
+    await api
+      .put("/api/user")
+      .set("cookie", cookies)
+      .send({
+        username: "david"
+      })
+      .expect(200)
+      .expect({
+        id: credentials.id,
+        name: credentials.username,
+        username: "david"
+      });
+  });
+
   test("can update another users details", async () => {
     await api
       .put(`/api/user/${user.id}`)

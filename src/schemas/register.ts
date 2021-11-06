@@ -27,8 +27,8 @@ export const RegisterConfirmSchema = RegisterSchema.shape({
 });
 
 export const EditUserSchema: SchemaOf<EditUser> = object({
-  name: string().nullable().max(128),
-  username: UsernameValidation
+  name: string().optional().max(128),
+  username: UsernameValidation.optional()
 });
 
 export const EditUserAdminSchema = EditUserSchema.shape({
