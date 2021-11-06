@@ -62,6 +62,7 @@ const RegisterView = () => {
               <FormikTextField
                 name="name"
                 autoComplete="name"
+                autoFocus
                 placeholder="John Smith"
                 margin="dense"
                 fullWidth

@@ -57,11 +57,7 @@ const LoginView = () => {
           {({ isSubmitting }) => (
             <Form>
               {showErr ? (
-                <Alert
-                  variant="outlined"
-                  severity="error"
-                  sx={{ mt: 1, width: "100%" }}
-                >
+                <Alert severity="error" sx={{ mb: 1, width: "100%" }}>
                   Incorrect username or password
                 </Alert>
               ) : (
@@ -70,6 +66,7 @@ const LoginView = () => {
               <FormikTextField
                 name="username"
                 autoComplete="username"
+                autoFocus
                 placeholder="john.smith"
                 margin="dense"
                 fullWidth
