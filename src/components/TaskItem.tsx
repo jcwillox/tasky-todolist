@@ -22,9 +22,24 @@ import { bindDialog, usePopoverState } from "../utils/popup-state";
 import AddTaskDialog from "./AddTaskDialog";
 import { PRIORITIES } from "../config";
 import LoadingMenuItem from "./LoadingMenuItem";
+import { formatDate, formatTime, hasTime } from "../utils/time";
 
 type TaskItemProps = {
   task: Task;
+};
+
+const renderSecondaryText = (task: Task) => {
+  let output = task.description || "";
+  if (task.dueAt) {
+    if (task.description) {
+      output += " • ";
+    }
+    output += formatDate.format(task.dueAt);
+    if (hasTime(task.dueAt)) {
+      output += " • " + formatTime.format(task.dueAt);
+    }
+  }
+  return output;
 };
 
 const CircleIcon = ({ priority }: { priority: number }) => {
@@ -110,9 +125,7 @@ const TaskItem = ({ task }: TaskItemProps) => {
         primary={
           <Typography sx={{ fontWeight: "bold" }}>{task.name}</Typography>
         }
-        secondary={`${task.description || ""} ${
-          task.dueAt ? `(${task.dueAt.toLocaleString()})` : ""
-        }`}
+        secondary={renderSecondaryText(task)}
       />
       <AddTaskDialog task={task} {...bindDialog(editDialog)} />
     </ListItem>

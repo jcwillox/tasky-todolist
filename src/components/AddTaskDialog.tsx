@@ -33,24 +33,11 @@ import FlagOutlinedIcon from "@mui/icons-material/FlagOutlined";
 import { bindMenu, bindTrigger } from "material-ui-popup-state/hooks";
 import { MobileDatePickerProps } from "@mui/lab/MobileDatePicker/MobileDatePicker";
 import { PRIORITIES } from "../config";
+import { clearTime, formatDate, formatTime, hasTime } from "../utils/time";
 
 interface AddTaskDialogProps extends DialogProps {
   task?: Task;
 }
-
-const locale = navigator.language !== "en-US" ? navigator.language : undefined;
-const formatDate = new Intl.DateTimeFormat(locale, { dateStyle: "medium" });
-const formatTime = new Intl.DateTimeFormat(locale, { timeStyle: "short" });
-
-const hasTime = (date?: Date | null) => {
-  if (!date) return false;
-  return !!(date.getHours() || date.getMinutes());
-};
-
-const clearTime = (date: Date) => {
-  date.setHours(0, 0, 0);
-  return date;
-};
 
 const PriorityMenu = () => {
   const [{ value }, , { setValue }] = useField("priority");
@@ -193,7 +180,7 @@ const AddTaskDialog = ({ task, ...props }: AddTaskDialogProps) => {
 
   return (
     <Dialog fullWidth {...props}>
-      <DialogTitle>{task ? "Edit task" : "Add a new to-do"}</DialogTitle>
+      <DialogTitle>{task ? "Edit task" : "Add a new task"}</DialogTitle>
       <DialogContent>
         <Formik
           initialValues={task ? task : initialValues}

@@ -21,7 +21,7 @@ const ChangePasswordDialog = (props: DialogProps) => {
   const wrapAsync = useAsyncError();
   const { changePassword } = useAuth();
   return (
-    <Dialog open={props.open} onClose={props.onClose} fullWidth>
+    <Dialog fullWidth {...props}>
       <DialogTitle>Change Password</DialogTitle>
       <DialogContent>
         <Formik

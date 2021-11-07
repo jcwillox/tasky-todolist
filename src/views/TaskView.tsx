@@ -42,7 +42,7 @@ const TaskView = () => {
       >
         <Container maxWidth="md" sx={{ p: { sm: 2, md: 3 } }} disableGutters>
           <Hidden smDown>
-            <Typography variant="h3">To-Do List</Typography>
+            <Typography variant="h4">Tasks</Typography>
           </Hidden>
           <ListItem
             disablePadding
