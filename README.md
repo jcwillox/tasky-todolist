@@ -1,6 +1,6 @@
 # Tasky
 
-*Tasky is a clean and efficient todo list application*
+*Tasky is a clean and efficient todo list application. This is a demo project and was created as part of a university group assignment.*
 
 ![task-view](screenshots/task-view.png)
 
